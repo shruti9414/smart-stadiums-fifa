@@ -1,0 +1,295 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  passwordHash        String
+  fullName            String
+  role                String    @default("fan")
+  department          String?   @default("general")
+  language            String    @default("en")
+  accessibility       Json?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  sessions            UserSession[]
+  conversations       AIConversation[]
+  tickets             MatchTicket[]
+  notifications       UserNotification[]
+  pushTokens          PushNotificationToken[]
+  auditLogs           AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@index([department])
+}
+
+model UserSession {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token       String    @unique
+  expiresAt   DateTime
+  ipAddress   String?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Stadium {
+  id          String    @id @default(cuid())
+  name        String
+  city        String
+  country     String
+  capacity    Int
+  latitude    Decimal   @db.Decimal(10, 8)
+  longitude   Decimal   @db.Decimal(11, 8)
+  mapUrl      String?
+  timezone    String
+  createdAt   DateTime  @default(now())
+
+  sections          SeatingSection[]
+  amenities         Amenity[]
+  exits             Exit[]
+  navigationPOIs    NavigationPOI[]
+  matches           Match[]
+  crowdAnalytics    CrowdAnalytics[]
+  crowdPredictions  CrowdPrediction[]
+  incidents         Incident[]
+
+  @@index([city])
+}
+
+model SeatingSection {
+  id              String    @id @default(cuid())
+  stadiumId       String
+  stadium         Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  sectionName     String
+  capacity        Int
+  coordinates     Json?
+  accessibility   Int?
+
+  seats           SeatingMapEntry[]
+
+  @@index([stadiumId])
+}
+
+model SeatingMapEntry {
+  id          String    @id @default(cuid())
+  sectionId   String
+  section     SeatingSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  rowNum      String
+  seatNum     String
+  status      String    @default("available")
+  userId      String?
+  lastUpdated DateTime  @updatedAt
+
+  tickets     MatchTicket[]
+
+  @@unique([sectionId, rowNum, seatNum])
+  @@index([sectionId, status])
+}
+
+model Amenity {
+  id          String    @id @default(cuid())
+  stadiumId   String
+  stadium     Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  type        String
+  name        String
+  coordinates Json?
+  capacity    Int?
+  queueLength Int?
+
+  @@index([stadiumId, type])
+}
+
+model NavigationPOI {
+  id          String    @id @default(cuid())
+  stadiumId   String
+  stadium     Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  poiType     String
+  name        String
+  coordinates Json
+  accessibility String?
+
+  @@index([stadiumId, poiType])
+}
+
+model Exit {
+  id          String    @id @default(cuid())
+  stadiumId   String
+  stadium     Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  name        String
+  coordinates Json?
+  emergency   Boolean   @default(false)
+
+  @@index([stadiumId])
+}
+
+model Match {
+  id          String    @id @default(cuid())
+  stadiumId   String
+  stadium     Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  teamA       String
+  teamB       String
+  matchDate   DateTime
+  status      String    @default("scheduled")
+  scoreA      Int       @default(0)
+  scoreB      Int       @default(0)
+
+  tickets     MatchTicket[]
+
+  @@index([stadiumId])
+  @@index([matchDate])
+}
+
+model MatchTicket {
+  id          String    @id @default(cuid())
+  matchId     String
+  match       Match     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seatId      String
+  seat        SeatingMapEntry @relation(fields: [seatId], references: [id])
+  qrCode      String?
+  status      String    @default("active")
+
+  @@unique([seatId, matchId])
+  @@index([userId])
+}
+
+model AIConversation {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stadiumId   String
+  topic       String?
+  context     Json?
+  tokenUsed   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+
+  messages    AIMessage[]
+
+  @@index([userId, createdAt])
+}
+
+model AIMessage {
+  id              String    @id @default(cuid())
+  conversationId  String
+  conversation    AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role            String
+  content         String    @db.Text
+  tokensUsed      Int?
+  createdAt       DateTime  @default(now())
+
+  @@index([conversationId])
+}
+
+model CrowdAnalytics {
+  id              String    @id @default(cuid())
+  stadiumId       String
+  stadium         Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  occupancyPct    Decimal   @db.Decimal(5, 2)
+  zoneData        Json?
+  timestamp       DateTime  @default(now())
+
+  @@index([stadiumId, timestamp])
+}
+
+model CrowdPrediction {
+  id              String    @id @default(cuid())
+  stadiumId       String
+  stadium         Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  predictionTime  DateTime
+  occupancyPct    Decimal   @db.Decimal(5, 2)
+  confidence      Decimal   @db.Decimal(3, 2)
+  riskAlerts      Json?
+
+  @@index([stadiumId, predictionTime])
+}
+
+model Incident {
+  id          String    @id @default(cuid())
+  stadiumId   String
+  stadium     Stadium   @relation(fields: [stadiumId], references: [id], onDelete: Cascade)
+  type        String
+  severity    String
+  location    String?
+  description String    @db.Text
+  status      String    @default("reported")
+  aiRecs      Json?
+  createdAt   DateTime  @default(now())
+
+  dispatches  Dispatch[]
+
+  @@index([stadiumId, status])
+}
+
+model Dispatch {
+  id            String    @id @default(cuid())
+  incidentId    String
+  incident      Incident  @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  teamType      String
+  status        String    @default("dispatched")
+  eta           String?
+  location      String?
+  dispatchedBy  String?
+  dispatchedAt  DateTime  @default(now())
+  arrivedAt     DateTime?
+  completedAt   DateTime?
+  notes         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([incidentId])
+  @@index([status])
+  @@index([dispatchedAt])
+}
+
+model UserNotification {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        String
+  title       String
+  message     String    @db.Text
+  actionUrl   String?
+  isRead      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  @@index([userId, isRead])
+}
+
+model PushNotificationToken {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token       String    @unique
+  deviceType  String
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  userId      String?
+  user        User?     @relation(fields: [userId], references: [id])
+  action      String
+  resource    String?
+  resourceId  String?
+  changes     Json?
+  ipAddress   String?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId, createdAt])
+}

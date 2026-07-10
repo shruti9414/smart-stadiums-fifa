@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Stadiums - Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e8eef7;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #0a0e27;
+            border-right: 2px solid #3d4066;
+            overflow-y: auto;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #fbbf24;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3d4066;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 12px 15px;
+            color: #a8b4d4;
+            text-decoration: none;
+            margin: 5px 0;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sidebar-nav a:hover {
+            background: #3d4066;
+            color: #fbbf24;
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav a.active {
+            background: #3d4066;
+            color: #fbbf24;
+            font-weight: bold;
+            border-left: 3px solid #fbbf24;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 280px;
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            color: #fbbf24;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(251, 191, 36, 0.2);
+        }
+
+        h2 {
+            color: #fbbf24;
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #a8b4d4;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #d8dce9;
+        }
+
+        .highlight {
+            background: #3d4066;
+            padding: 20px;
+            border-left: 4px solid #fbbf24;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .code-block {
+            background: #0f172a;
+            border: 1px solid #3d4066;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #10b981;
+        }
+
+        .code-block code {
+            color: #10b981;
+        }
+
+        .flow-box {
+            background: linear-gradient(135deg, #3d4066 0%, #2d3561 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #5a6b8f;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            color: #fbbf24;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .step {
+            background: #1a1f3a;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 3px solid #fbbf24;
+            border-radius: 4px;
+        }
+
+        .step-number {
+            color: #fbbf24;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #1a1f3a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #3d4066;
+        }
+
+        th {
+            background: #3d4066;
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        td {
+            color: #d8dce9;
+        }
+
+        tr:hover {
+            background: #2d3561;
+        }
+
+        .file-tree {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #fbbf24;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #10b981;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .checkbox {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #fbbf24;
+            border-radius: 3px;
+            margin-right: 10px;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+            position: relative;
+            left: -12px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #3d4066 0%, #2d3561 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #fbbf24;
+        }
+
+        .feature-card h4 {
+            color: #fbbf24;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            background: #2d3561;
+            height: 8px;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #10b981);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .top-bar {
+            background: #0a0e27;
+            border-bottom: 2px solid #3d4066;
+            padding: 15px 40px;
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .top-bar h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #fbbf24;
+        }
+
+        .btn-back {
+            background: #3d4066;
+            color: #fbbf24;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #fbbf24;
+            color: #0a0e27;
+        }
+
+        .command-box {
+            background: #0f172a;
+            border: 2px solid #10b981;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #10b981;
+        }
+
+        .command-box strong {
+            color: #fbbf24;
+        }
+
+        .success {
+            color: #10b981;
+        }
+
+        .error {
+            color: #ef4444;
+        }
+
+        .warning {
+            color: #f59e0b;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3d4066;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5a6b8f;
+        }
+
+        .emoji {
+            margin-right: 8px;
+        }
+
+        .collapsible {
+            cursor: pointer;
+            padding: 12px;
+            background: #3d4066;
+            border: none;
+            color: #fbbf24;
+            text-align: left;
+            border-radius: 6px;
+            width: 100%;
+            font-weight: bold;
+            margin: 10px 0;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .collapsible:hover {
+            background: #5a6b8f;
+        }
+
+        .collapsible.active {
+            background: #fbbf24;
+            color: #0a0e27;
+        }
+
+        .collapsible-content {
+            display: none;
+            padding: 15px;
+            background: #2d3561;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .collapsible-content.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main {
+                margin-left: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">🏟️ Smart Stadiums</div>
+            <div class="sidebar-nav">
+                <a onclick="showSection('overview')" class="nav-link active">📖 Overview</a>
+                <a onclick="showSection('architecture')" class="nav-link">🏗️ Architecture</a>
+                <a onclick="showSection('features')" class="nav-link">✨ Features</a>
+                <a onclick="showSection('setup')" class="nav-link">🚀 Local Setup</a>
+                <a onclick="showSection('testing')" class="nav-link">✅ Testing</a>
+                <a onclick="showSection('files')" class="nav-link">📁 Files</a>
+                <a onclick="showSection('api')" class="nav-link">🔌 APIs</a>
+                <a onclick="showSection('database')" class="nav-link">🗄️ Database</a>
+                <a onclick="showSection('checklist')" class="nav-link">📋 Checklist</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- SECTION 1: OVERVIEW -->
+            <div id="overview" class="section active">
+                <div class="top-bar">
+                    <h2>📖 Project Overview</h2>
+                </div>
+
+                <h1>Smart Stadiums FIFA 2026</h1>
+                <p style="font-size: 1.1em; color: #fbbf24;">Complete Guide - Kya Hai, Kaise Chalta Hai</p>
+
+                <div class="highlight">
+                    <h3>🎯 Project Kya Hai?</h3>
+                    <p><strong>Smart Stadiums FIFA 2026</strong> ek complete web application hai jo FIFA World Cup 2026 ke stadiums ke operations better karne ke liye banaya gaya.</p>
+                </div>
+
+                <h2>4 Main Features</h2>
+                <div class="feature-card">
+                    <h4>🤖 AI Stadium Companion</h4>
+                    <p>AI assistant jo multilingual support karta hai aur user questions ka jawab deta hai.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>📊 Crowd Intelligence Dashboard</h4>
+                    <p>Real-time crowd data, occupancy tracking, aur 4-hour predictions.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🚨 Emergency Response System</h4>
+                    <p>Incident reporting, real-time tracking, aur AI recommendations.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h4>🗺️ Smart Navigation</h4>
+                    <p>Indoor wayfinding, accessibility routing, aur crowd-aware path planning.</p>
+                </div>
+
+                <h2>👥 Koun Istemaaal Karega?</h2>
+                <table>
+                    <tr>
+                        <th>User Type</th>
+                        <th>Kya Use Karega</th>
+                    </tr>
+                    <tr>
+                        <td>Fans</td>
+                        <td>AI assistant, Navigation, Crowd Info</td>
+                    </tr>
+                    <tr>
+                        <td>Organizers</td>
+                        <td>Dashboard, Crowd Analytics, Predictions</td>
+                    </tr>
+                    <tr>
+                        <td>Security Staff</td>
+                        <td>Incidents, Emergency Response, Alerts</td>
+                    </tr>
+                    <tr>
+                        <td>Volunteers</td>
+                        <td>Task Assignment, Communication</td>
+                    </tr>
+                    <tr>
+                        <td>Admin</td>
+                        <td>System Management, Configuration</td>
+                    </tr>
+                </table>
+
+                <h2>🏗️ Technology Stack</h2>
+                <div class="code-block">
+Frontend: React 19 + Next.js 15 + TypeScript + Tailwind CSS + Three.js
+Backend: Next.js API Routes + Prisma ORM + OpenAI GPT-4
+Database: TiDB MySQL
+Deployment: Vercel
+                </div>
+            </div>
+
+            <!-- SECTION 2: ARCHITECTURE -->
+            <div id="architecture" class="section">
+                <div class="top-bar">
+                    <h2>🏗️ Architecture Explained</h2>
+                </div>
+
+                <h1>Pura Flow Kaise Kaam Karta Hai?</h1>
+
+                <h2>1️⃣ User Signup/Login Flow</h2>
+                <div class="flow-box">
+                    <div class="step">
+                        <span class="step-number">1.</span>
+                        <strong>User aata hai:</strong> http://localhost:3000
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">2.</span>
+                        <strong>Login page dikhai deta hai</strong>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">3.</span>
+                        <strong>Email + Password enter karta hai</strong>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">4.</span>
+                        <strong>Browser → Server ko POST request:</strong> /api/auth/login
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">5.</span>
+                        <strong>Server → Database check karta hai</strong>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">6.</span>
+                        <strong>Password match kare?</strong>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">7.</span>
+                        <strong>Agar match → JWT token generate karta hai</strong>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">8.</span>
+                        <strong>Token browser ko bhej deta hai</strong>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">9.</span>
+                        <strong>Browser → Token localStorage mein save karta hai</strong>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">10.</span>
+                        <strong class="success">Dashboard page open hota hai ✓</strong>
+                    </div>
+                </div>
+
+                <h2>2️⃣ AI Chat Flow</h2>
+                <div class="flow-box">
+                    <div class="step">
+                        <span class="step-number">1.</span>
+                        User kuch likhe: "Bathroom kidhar hai?"
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">2.</span>
+                        Browser → Server ko POST request: /api/ai/chat
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">3.</span>
+                        Server → Conversation history fetch karta hai
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">4.</span>
+                        Server → Context gather karta hai (location, role, previous messages)
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">5.</span>
+                        Server → OpenAI ko bhejta hai (context + message)
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">6.</span>
+                        OpenAI → Smart response generate karta hai
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">7.</span>
+                        Server → Response save karta hai database mein
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">8.</span>
+                        Browser → Chat interface mein message dikhai deta hai
+                    </div>
+                </div>
+
+                <h2>3️⃣ Crowd Data Flow</h2>
+                <div class="flow-box">
+                    <div class="step">
+                        <span class="step-number">Server har 30 seconds mein:</span>
+                    </div>
+                    <div class="step" style="margin-top: 10px;">
+                        ✓ Sensors/Mobile apps se crowd data collect karta hai
+                    </div>
+                    <div class="step">
+                        ✓ Database mein store karta hai (crowd_analytics table)
+                    </div>
+                    <div class="step">
+                        ✓ Predictions calculate karta hai
+                    </div>
+                    <div class="step">
+                        ✓ Dashboard ko realtime update bhejta hai
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: FEATURES -->
+            <div id="features" class="section">
+                <div class="top-bar">
+                    <h2>✨ Features Breakdown</h2>
+                </div>
+
+                <h1>4 Core Features - Detailed</h1>
+
+                <h2>Feature 1️⃣: AI Stadium Companion</h2>
+                <div class="highlight">
+                    <h3>Ye Kya Karata Hai?</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>User se conversational questions poochta hai</li>
+                        <li>Smart responses deta hai</li>
+                        <li>Zyada se zyada languages support karta hai</li>
+                        <li>Context-aware (janti hai user kahan hai)</li>
+                    </ul>
+                </div>
+
+                <h3>Example Interactions:</h3>
+                <div class="code-block">
+User: "Where's the nearest restroom?"
+AI: "Nearest restroom is at Section A, Level 2 (100m away).
+    Estimated wait: 3 minutes. Directions available?"
+
+User: "I'm in a wheelchair"
+AI: "Accessible route: Main entrance → Elevator A → Level 2 → Section A
+    Distance: 150m, Time: 8 minutes. All wheelchair accessible ✓"
+                </div>
+
+                <h2>Feature 2️⃣: Crowd Intelligence Dashboard</h2>
+                <div class="highlight">
+                    <h3>Dashboard Display:</h3>
+                    <div style="margin-top: 15px; background: #1a1f3a; padding: 15px; border-radius: 6px;">
+                        <div>📊 Stadium Occupancy: 65%</div>
+                        <div>👥 Live Visitors: 8,234</div>
+                        <div>🚨 Active Incidents: 3</div>
+                        <div>🙋 Volunteers: 127</div>
+                    </div>
+                </div>
+
+                <h3>Plus:</h3>
+                <ul style="margin-left: 20px;">
+                    <li>✓ 3D Stadium visualization</li>
+                    <li>✓ Zone-wise occupancy breakdown</li>
+                    <li>✓ 4-hour predictions</li>
+                    <li>✓ Live activity feed</li>
+                    <li>✓ AI recommendations</li>
+                </ul>
+
+                <h2>Feature 3️⃣: Emergency Response System</h2>
+                <div class="highlight">
+                    <h3>Incident Types:</h3>
+                    <div style="margin-top: 10px;">
+                        <div style="padding: 8px; margin: 5px 0; background: #2d3561; border-radius: 4px;">🏥 Medical</div>
+                        <div style="padding: 8px; margin: 5px 0; background: #2d3561; border-radius: 4px;">🔒 Security</div>
+                        <div style="padding: 8px; margin: 5px 0; background: #2d3561; border-radius: 4px;">🔥 Fire</div>
+                        <div style="padding: 8px; margin: 5px 0; background: #2d3561; border-radius: 4px;">👤 Lost Person</div>
+                    </div>
+                </div>
+
+                <h3>Severity Levels:</h3>
+                <div style="margin-left: 20px;">
+                    <div>🟦 Low</div>
+                    <div>🟨 Medium</div>
+                    <div>🟧 High</div>
+                    <div>🟥 Critical</div>
+                </div>
+
+                <h2>Feature 4️⃣: Smart Navigation</h2>
+                <div class="code-block">
+User Input:
+From: Main Entrance
+To: Nearest Restroom
+
+Output:
+═══════════════════════════════════
+Route: Main Entrance → Elevator A → Level 2 → Section A
+Distance: 450 meters
+Estimated Time: 6 minutes
+Accessibility Score: 95/100
+Crowd Risk: Low
+
+Waypoints:
+1. Main Entrance
+2. Elevator A (Accessible)
+3. Level 2
+4. Section A Restroom
+                </div>
+            </div>
+
+            <!-- SECTION 4: LOCAL SETUP -->
+            <div id="setup" class="section">
+                <div class="top-bar">
+                    <h2>🚀 Local Setup - Step by Step</h2>
+                </div>
+
+                <h1>Local mein Setup Kaise Karte Ho?</h1>
+
+                <h2>Step 1️⃣: Project Folder Mein Jawa</h2>
+                <div class="command-box">
+<strong>Command:</strong>
+cd C:\Users\Admin\Documents\smart-stadiums-fifa
+
+<strong>Verify:</strong>
+dir
+
+<strong>Output mein ye files dikhai denge:</strong>
+package.json, README.md, src/, prisma/, etc.
+                </div>
+
+                <h2>Step 2️⃣: Dependencies Install Karna</h2>
+                <div class="command-box">
+<strong>Command:</strong>
+npm install
+
+<strong>Ye kya karata hai?</strong>
+→ node_modules folder create karta hai
+→ Sab libraries download karta hai
+→ 2-5 minutes lag sakhta hai
+
+<strong>Jab complete ho:</strong>
+added XXX packages in 3m
+                </div>
+
+                <h2>Step 3️⃣: Environment File Setup</h2>
+                <div class="command-box">
+<strong>Command:</strong>
+cp .env.example .env.local
+
+<strong>Ye kya karata hai?</strong>
+→ File copy karta hai
+→ Ab .env.local edit kar sakte ho
+                </div>
+
+                <h3>Edit .env.local File:</h3>
+                <div class="code-block">
+DATABASE_URL=mysql://user:password@tidbhost:4000/smart_stadiums
+OPENAI_API_KEY=sk-your-api-key-here
+AUTH_SECRET=your-secret-key
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NODE_ENV=development
+                </div>
+
+                <div class="highlight">
+                    <strong>⚠️ Important:</strong> DATABASE_URL aur OPENAI_API_KEY set karne zaruri hain
+                </div>
+
+                <h2>Step 4️⃣: TypeScript Check</h2>
+                <div class="command-box">
+<strong>Command:</strong>
+npm run type-check
+
+<strong>Expected:</strong>
+✓ No errors found
+                </div>
+
+                <h2>Step 5️⃣: Development Server Start</h2>
+                <div class="command-box">
+<strong>Command:</strong>
+npm run dev
+
+<strong>Output:</strong>
+▲ Next.js 15.0.0
+- Local: http://localhost:3000
+Ready in 2.5s
+                </div>
+
+                <h2>Step 6️⃣: Browser Mein Open Karna</h2>
+                <div class="command-box">
+<strong>URL:</strong>
+http://localhost:3000
+
+OR
+
+<strong>Browser mein type karo:</strong>
+localhost:3000
+                </div>
+
+                <h3>Expected:</h3>
+                <div class="step">
+                    ✓ Login page load hona chahiye
+                    ✓ Beautiful black theme
+                    ✓ Input fields dikhai denge
+                </div>
+            </div>
+
+            <!-- SECTION 5: TESTING -->
+            <div id="testing" class="section">
+                <div class="top-bar">
+                    <h2>✅ Testing Guide</h2>
+                </div>
+
+                <h1>Har Feature Ko Test Kaise Karu?</h1>
+
+                <h2>Test 1️⃣: Login & Registration</h2>
+
+                <button class="collapsible" onclick="toggleCollapsible(event)">
+                    ▶ Registration Test
+                </button>
+                <div class="collapsible-content">
+                    <div class="step">
+                        <span class="step-number">1.</span> http://localhost:3000 open karo
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2.</span> "Register here" link click karo
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3.</span> Form fill karo:
+                        <div style="margin-top: 10px; margin-left: 20px;">
+                            Full Name: Aapka naam
+                            Email: Aapka email
+                            Password: Min 8 chars + 1 uppercase
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4.</span> "Create Account" button click karo
+                    </div>
+                    <div class="step" style="background: #1a6b1a; border-left: 3px solid #10b981;">
+                        <span class="success">✓ Account create hona chahiye</span>
+                    </div>
+                </div>
+
+                <button class="collapsible" onclick="toggleCollapsible(event)">
+                    ▶ Demo Login Test
+                </button>
+                <div class="collapsible-content">
+                    <div class="step">
+                        <span class="step-number">Email:</span> demo@stadiums.com
+                    </div>
+                    <div class="step">
+                        <span class="step-number">Password:</span> Demo@12345
+                    </div>
+                    <div class="step" style="background: #1a6b1a; border-left: 3px solid #10b981;">
+                        <span class="success">✓ Dashboard page open hona chahiye</span>
+                    </div>
+                </div>
+
+                <h2>Test 2️⃣: Dashboard & 3D Visualization</h2>
+
+                <button class="collapsible" onclick="toggleCollapsible(event)">
+                    ▶ Dashboard Load Test
+                </button>
+                <div class="collapsible-content">
+                    <div class="step">
+                        <span class="step-number">1.</span> Login karo (demo credentials)
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2.</span> Dashboard loads ✓
+                    </div>
+                    <div class="step">
+                        Ye dikhai dena chahiye:
+                        <div style="margin-top: 10px; margin-left: 20px;">
+                            ✓ "Smart Stadiums" heading (yellow)
+                            ✓ 4 Stat cards (color-coded)
+                            ✓ 3D Stadium visualization
+                            ✓ Live feed section
+                        </div>
+                    </div>
+                </div>
+
+                <button class="collapsible" onclick="toggleCollapsible(event)">
+                    ▶ 3D Stadium Test
+                </button>
+                <div class="collapsible-content">
+                    <div class="step">
+                        <span class="step-number">1.</span> Stadium mein mouse drag karo
+                        <div style="margin-top: 5px; margin-left: 20px;">Stadium rotate hona chahiye</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2.</span> Zoom karo (scroll wheel)
+                        <div style="margin-top: 5px; margin-left: 20px;">Stadium bada/chhota hona chahiye</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3.</span> Animation dekho
+                        <div style="margin-top: 5px; margin-left: 20px;">Smooth rotation (60 FPS)</div>
+                    </div>
+                </div>
+
+                <h2>Test 3️⃣: AI Companion Chat</h2>
+
+                <button class="collapsible" onclick="toggleCollapsible(event)">
+                    ▶ Chat Test
+                </button>
+                <div class="collapsible-content">
+                    <div class="step">
+                        <span class="step-number">1.</span> /dashboard/companion page open karo
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2.</span> Input box mein type karo:
+                        <div style="margin-top: 5px; margin-left: 20px; color: #fbbf24;">
+                            "Where's the nearest bathroom?"
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3.</span> Send button click karo
+                    </div>
+                    <div class="step" style="background: #1a6b1a; border-left: 3px solid #10b981;">
+                        <span class="success">✓ AI response aana chahiye (5-10 seconds)</span>
+                    </div>
+                </div>
+
+                <h2>Test 4️⃣: Emergency Response</h2>
+
+                <button class="collapsible" onclick="toggleCollapsible(event)">
+                    ▶ Incident Report Test
+                </button>
+                <div class="collapsible-content">
+                    <div class="step">
+                        <span class="step-number">1.</span> /dashboard/incidents page open karo
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2.</span> "+ Report Incident" button click karo
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3.</span> Form fill karo:
+                        <div style="margin-top: 10px; margin-left: 20px;">
+                            Type: Medical
+                            Severity: High
+                            Location: Section A
+                            Description: Person fell down
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">4.</span> "Submit Report" button click karo
+                    </div>
+                    <div class="step" style="background: #1a6b1a; border-left: 3px solid #10b981;">
+                        <span class="success">✓ Incident list mein dikhai de</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: FILES -->
+            <div id="files" class="section">
+                <div class="top-bar">
+                    <h2>📁 File Walkthrough</h2>
+                </div>
+
+                <h1>Project Structure Explained</h1>
+
+                <div class="file-tree">
+smart-stadiums-fifa/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx           ← Root layout
+│   │   ├── page.tsx             ← Home (redirects to login)
+│   │   ├── globals.css          ← Global styles
+│   │   ├── (auth)/
+│   │   │   ├── login/page.tsx    ← Login page
+│   │   │   └── register/page.tsx ← Register page
+│   │   ├── dashboard/           ← Dashboard pages
+│   │   │   ├── page.tsx          ← Main dashboard
+│   │   │   ├── companion/        ← AI chat
+│   │   │   ├── incidents/        ← Emergency
+│   │   │   └── navigate/         ← Navigation
+│   │   └── api/                  ← Backend APIs
+│   │       ├── auth/
+│   │       ├── ai/
+│   │       ├── crowd/
+│   │       ├── incidents/
+│   │       ├── navigation/
+│   │       └── health/
+│   │
+│   ├── components/
+│   │   └── Stadium3D.tsx    ← 3D Visualization
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts       ← Auth state
+│   │   └── useApi.ts        ← API calling
+│   │
+│   └── lib/
+│       ├── auth.ts          ← JWT & Security
+│       ├── db.ts            ← Prisma client
+│       ├── api.ts           ← API utilities
+│       ├── validators.ts    ← Validation
+│       └── utils.ts         ← Helpers
+│
+├── prisma/
+│   ├── schema.prisma        ← Database schema
+│   └── seed.ts              ← Demo data
+│
+├── .env.example             ← Environment template
+├── package.json             ← Dependencies
+└── README.md                ← Documentation
+                </div>
+
+                <h2>Important Files</h2>
+
+                <h3>1. src/app/layout.tsx (Root Layout)</h3>
+                <div class="highlight">
+                    Ye file page load hone ka base structure hai. Sab pages yahan se wrap hote hain.
+                </div>
+
+                <h3>2. src/app/dashboard/page.tsx (Main Dashboard)</h3>
+                <div class="highlight">
+                    Main dashboard page jo 3D stadium, stats, activity feed display karta hai.
+                </div>
+
+                <h3>3. src/components/Stadium3D.tsx (3D Visualization)</h3>
+                <div class="highlight">
+                    Three.js se 3D stadium render karta hai. Occupancy ke hisaab colors change hote hain.
+                </div>
+
+                <h3>4. src/app/api/ (Backend APIs)</h3>
+                <div class="highlight">
+                    Sab backend endpoints yahan hain:
+                    <div style="margin-top: 10px; margin-left: 20px;">
+                        • /api/auth/login
+                        • /api/auth/register
+                        • /api/ai/chat
+                        • /api/crowd/live-stats
+                        • /api/incidents/report
+                        • /api/navigation/route
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 7: APIs -->
+            <div id="api" class="section">
+                <div class="top-bar">
+                    <h2>🔌 API Endpoints</h2>
+                </div>
+
+                <h1>API Endpoints - Detailed</h1>
+
+                <h2>Authentication APIs</h2>
+
+                <h3>POST /api/auth/login</h3>
+                <div class="code-block">
+<strong>Request:</strong>
+{
+  "email": "demo@stadiums.com",
+  "password": "Demo@12345"
+}
+
+<strong>Response (Success):</strong>
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "user_123",
+      "email": "demo@stadiums.com",
+      "fullName": "Demo User",
+      "role": "fan"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+                </div>
+
+                <h3>POST /api/auth/register</h3>
+                <div class="code-block">
+<strong>Request:</strong>
+{
+  "email": "newuser@example.com",
+  "password": "Pass@12345",
+  "fullName": "New User"
+}
+
+<strong>Response:</strong>
+Same as login (user + token)
+                </div>
+
+                <h2>AI Chat API</h2>
+
+                <h3>POST /api/ai/chat</h3>
+                <div class="code-block">
+<strong>Request:</strong>
+{
+  "message": "Where's the bathroom?",
+  "conversationId": null,
+  "context": {
+    "location": "Section A",
+    "role": "fan",
+    "language": "en"
+  }
+}
+
+<strong>Response:</strong>
+{
+  "success": true,
+  "data": {
+    "conversationId": "conv_123",
+    "response": "The nearest restroom is at Section A, Level 2...",
+    "tokens": 150
+  }
+}
+                </div>
+
+                <h2>Crowd Data API</h2>
+
+                <h3>GET /api/crowd/live-stats</h3>
+                <div class="code-block">
+<strong>Query:</strong>
+/api/crowd/live-stats?stadiumId=default-stadium
+
+<strong>Response:</strong>
+{
+  "success": true,
+  "data": {
+    "totalOccupancy": 65.5,
+    "zones": [...],
+    "predictions": [...],
+    "lastUpdated": "2026-07-07T15:32:00Z"
+  }
+}
+                </div>
+
+                <h2>Incidents API</h2>
+
+                <h3>POST /api/incidents/report</h3>
+                <div class="code-block">
+<strong>Request:</strong>
+{
+  "type": "medical",
+  "severity": "high",
+  "location": "Section A",
+  "description": "Person fell down"
+}
+
+<strong>Response:</strong>
+{
+  "success": true,
+  "data": {
+    "incidentId": "inc_123",
+    "status": "reported",
+    "createdAt": "2026-07-07T15:30:00Z"
+  }
+}
+                </div>
+            </div>
+
+            <!-- SECTION 8: DATABASE -->
+            <div id="database" class="section">
+                <div class="top-bar">
+                    <h2>🗄️ Database Explained</h2>
+                </div>
+
+                <h1>Database Schema - 14 Tables</h1>
+
+                <h2>Main Tables</h2>
+
+                <h3>1. users Table</h3>
+                <table>
+                    <tr>
+                        <th>Column</th>
+                        <th>Type</th>
+                        <th>Purpose</th>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>String</td>
+                        <td>Unique identifier</td>
+                    </tr>
+                    <tr>
+                        <td>email</td>
+                        <td>String</td>
+                        <td>Login ke liye</td>
+                    </tr>
+                    <tr>
+                        <td>passwordHash</td>
+                        <td>String</td>
+                        <td>Encrypted password</td>
+                    </tr>
+                    <tr>
+                        <td>fullName</td>
+                        <td>String</td>
+                        <td>User ka naam</td>
+                    </tr>
+                    <tr>
+                        <td>role</td>
+                        <td>String</td>
+                        <td>fan/organizer/security/volunteer/admin</td>
+                    </tr>
+                </table>
+
+                <h3>2. ai_conversations Table</h3>
+                <table>
+                    <tr>
+                        <th>Column</th>
+                        <th>Purpose</th>
+                    </tr>
+                    <tr>
+                        <td>id</td>
+                        <td>Conversation ID</td>
+                    </tr>
+                    <tr>
+                        <td>userId</td>
+                        <td>Kiska conversation hai</td>
+                    </tr>
+                    <tr>
+                        <td>context</td>
+                        <td>Location, role, preferences</td>
+                    </tr>
+                    <tr>
+                        <td>totalTokensUsed</td>
+                        <td>API call cost</td>
+                    </tr>
+                </table>
+
+                <h3>3. crowd_analytics Table</h3>
+                <div class="highlight">
+                    <strong>Purpose:</strong> Real-time crowd data store karta hai (every 30 seconds)
+                    <div style="margin-top: 10px;">
+                        • occupancyPct: 0-100 percentage
+                        • zoneData: JSON with zone details
+                        • timestamp: Record time
+                    </div>
+                </div>
+
+                <h3>4. incidents Table</h3>
+                <div class="highlight">
+                    <strong>Purpose:</strong> Emergency reports store karta hai
+                    <div style="margin-top: 10px;">
+                        • type: medical/security/fire
+                        • severity: low/medium/high/critical
+                        • location: Where incident happened
+                        • status: reported/acknowledged/resolved
+                    </div>
+                </div>
+
+                <h2>Other Tables</h2>
+                <div class="code-block">
+seating_sections   → Stadium ke sections
+seating_seats      → Individual seats
+amenities          → Bathrooms, food courts, etc
+gates              → Entry/exit gates
+navigation_pois    → Landmarks (Points of Interest)
+matches            → Match events
+match_tickets      → Ticket information
+user_notifications → Alerts aur notifications
+                </div>
+            </div>
+
+            <!-- SECTION 9: CHECKLIST -->
+            <div id="checklist" class="section">
+                <div class="top-bar">
+                    <h2>📋 Complete Testing Checklist</h2>
+                </div>
+
+                <h1>Step-by-Step Testing Checklist</h1>
+
+                <h2>DAY 1: Setup</h2>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    npm install
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    cp .env.example .env.local
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Edit .env.local (DATABASE_URL, OPENAI_API_KEY)
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    npm run type-check (no errors?)
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    npm run dev (server starts?)
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    http://localhost:3000 open karo
+                </div>
+
+                <h2>DAY 2: Authentication</h2>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Register new account
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Login with demo@stadiums.com / Demo@12345
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Should redirect to dashboard
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Logout aur phir login karo
+                </div>
+
+                <h2>DAY 3: Dashboard</h2>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Dashboard loads properly
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    3D stadium renders
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Animation smooth (no lag)
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Statistics cards display
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Activity feed shows
+                </div>
+
+                <h2>DAY 4: AI Companion</h2>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    /dashboard/companion page loads
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Send first message
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    AI response comes (5-10 seconds)
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Send follow-up message
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Refresh page - history persists
+                </div>
+
+                <h2>DAY 5: Emergency Response</h2>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    /dashboard/incidents page loads
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    "+ Report Incident" button works
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Form fields fill correctly
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Submit incident
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Incident appears in list
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Color coding correct (severity)
+                </div>
+
+                <h2>DAY 6: Complete Workflow</h2>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Login → Dashboard → See 3D stadium
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    AI Chat → Ask questions → Get responses
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Report incident → See in list
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Check crowd data (if available)
+                </div>
+                <div class="step">
+                    <input type="checkbox" class="checkbox" onclick="this.classList.toggle('checked')">
+                    Logout successfully
+                </div>
+
+                <h2>Final Check</h2>
+                <div class="highlight">
+                    <strong>Expected Results:</strong>
+                    <div style="margin-top: 15px;">
+                        ✓ All features work smoothly
+                        ✓ No console errors
+                        ✓ No lag or freezing
+                        ✓ Professional appearance
+                        ✓ Responsive design
+                        ✓ Fast loading times
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            // Remove active class from nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked nav link
+            event.target.classList.add('active');
+
+            // Scroll to top
+            document.querySelector('.main').scrollTop = 0;
+        }
+
+        function toggleCollapsible(event) {
+            const content = event.target.nextElementSibling;
+            event.target.classList.toggle('active');
+            content.classList.toggle('show');
+        }
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set first nav link as active
+            document.querySelector('.nav-link').classList.add('active');
+        });
+    </script>
+</body>
+</html>

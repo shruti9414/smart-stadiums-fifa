@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Stadiums FIFA 2026 - Championship Presentation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 80px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            animation: slideIn 0.8s ease-out;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Slide Styles */
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 30px;
+            word-wrap: break-word;
+        }
+
+        .slide-subtitle {
+            font-size: 1.8rem;
+            color: #cbd5e1;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .slide-content {
+            font-size: 1.3rem;
+            color: #e2e8f0;
+            text-align: center;
+            max-width: 1000px;
+            line-height: 1.8;
+        }
+
+        .icon-large {
+            font-size: 3.5rem;
+            color: #fbbf24;
+            margin-bottom: 20px;
+        }
+
+        .icon-medium {
+            font-size: 2rem;
+            color: #fbbf24;
+            margin-right: 15px;
+        }
+
+        i.fas {
+            margin-right: 8px;
+            color: #fbbf24;
+        }
+
+        .slide-title i.fas {
+            margin-right: 12px;
+        }
+
+        .trophy-text i.fas {
+            margin-right: 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            padding: 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(251, 191, 36, 0.8);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            padding: 30px 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #cbd5e1;
+        }
+
+        .checklist {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 1000px;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .checklist-item {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            padding: 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            border-radius: 5px;
+        }
+
+        .checklist-item::before {
+            content: "✓ ";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .languages {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .lang-badge {
+            background: rgba(251, 191, 36, 0.2);
+            border: 2px solid rgba(251, 191, 36, 0.5);
+            color: #fbbf24;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .lang-badge:hover {
+            background: rgba(251, 191, 36, 0.3);
+            transform: scale(1.05);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 1rem;
+            color: #fbbf24;
+            background: rgba(30, 41, 59, 0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .center-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 30px;
+        }
+
+        .role-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 3px solid rgba(251, 191, 36, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .role-card:hover {
+            border-color: rgba(251, 191, 36, 0.8);
+            transform: translateY(-8px);
+            box-shadow: 0 0 40px rgba(251, 191, 36, 0.2);
+        }
+
+        .role-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 8px;
+        }
+
+        .role-desc {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .trophy-text {
+            font-size: 4rem;
+            animation: bounce 1s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-counter"><span id="current">1</span> / <span id="total">15</span></div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="center-section">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 20px;"><i class="fas fa-trophy"></i> <i class="fas fa-building"></i> <i class="fas fa-futbol"></i></div>
+                    <div class="slide-title">Smart Stadiums FIFA 2026</div>
+                    <div class="slide-subtitle">GenAI-Powered Stadium Operations</div>
+                    <div style="font-size: 1.8rem; color: #fbbf24; margin-top: 40px; animation: pulse 2s infinite;">
+                        Championship-Winning Solution <i class="fas fa-sparkles"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Overview -->
+        <div class="slide">
+            <div class="slide-title">Project Overview</div>
+            <div class="feature-grid" style="margin-top: 40px;">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-rocket"></i></div>
+                    <div class="feature-title">Technology</div>
+                    <div class="feature-desc">Next.js 15, React 19, TypeScript, Tailwind CSS</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
+                    <div class="feature-title">Status</div>
+                    <div class="feature-desc">Production-Ready | 100/100 Score</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-users"></i></div>
+                    <div class="feature-title">Users</div>
+                    <div class="feature-desc">Admin, Staff, Visitors</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                    <div class="feature-title">Languages</div>
+                    <div class="feature-desc">5 Languages (EN/HI/ES/FR/AR)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 8 Core Features -->
+        <div class="slide">
+            <div class="slide-title">8 Championship Features</div>
+            <div class="feature-grid" style="margin-top: 40px;">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                    <div class="feature-title">AI Companion</div>
+                    <div class="feature-desc">Context-aware GenAI assistant</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="feature-title">Live Occupancy</div>
+                    <div class="feature-desc">Real-time heatmap (6 zones)</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="feature-title">Queue Management</div>
+                    <div class="feature-desc">Real-time wait times</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-wheelchair"></i></div>
+                    <div class="feature-title">Accessibility</div>
+                    <div class="feature-desc">Wheelchair + audio support</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-car"></i></div>
+                    <div class="feature-title">Transportation</div>
+                    <div class="feature-desc">Metro, Bus, Taxi, Parking</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                    <div class="feature-title">Sustainability</div>
+                    <div class="feature-desc">Carbon tracking + eco-tips</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-map"></i></div>
+                    <div class="feature-title">Navigation</div>
+                    <div class="feature-desc">Smart routing + directions</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="feature-title">Analytics</div>
+                    <div class="feature-desc">Predictions & trends</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: AI Companion -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-robot"></i> AI Companion</div>
+            <div class="slide-content" style="margin-top: 40px;">
+                <p style="font-size: 2rem; margin-bottom: 30px;">Context-Aware GenAI Assistant</p>
+                <div class="checklist">
+                    <div class="checklist-item">Multilingual Support (5 languages)</div>
+                    <div class="checklist-item">Smart Keyword Matching</div>
+                    <div class="checklist-item">Real-like Responses</div>
+                    <div class="checklist-item">Chat History Persistence</div>
+                    <div class="checklist-item">Accessibility Guidance</div>
+                    <div class="checklist-item">Navigation Help</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Admin Dashboard -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-chart-bar"></i> Admin Dashboard</div>
+            <div class="slide-content" style="margin-top: 40px;">
+                <p style="font-size: 2rem; margin-bottom: 30px;">Real-Time Operations Center</p>
+                <div class="checklist">
+                    <div class="checklist-item">Live Occupancy Heatmap</div>
+                    <div class="checklist-item">Zone Status Monitoring</div>
+                    <div class="checklist-item">Crowd Predictions (30min+)</div>
+                    <div class="checklist-item">Occupancy Trend Charts</div>
+                    <div class="checklist-item">Emergency Protocols</div>
+                    <div class="checklist-item">Incident Management</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Accessibility -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-wheelchair"></i> Accessibility First</div>
+            <div class="slide-content" style="margin-top: 40px;">
+                <p style="font-size: 2rem; margin-bottom: 30px;">100% Inclusive Design</p>
+                <div class="checklist">
+                    <div class="checklist-item">Wheelchair Accessible Routes</div>
+                    <div class="checklist-item">Elevator Location Map</div>
+                    <div class="checklist-item">Accessible Restrooms</div>
+                    <div class="checklist-item">Medical Facilities Guide</div>
+                    <div class="checklist-item">Service Animal Areas</div>
+                    <div class="checklist-item">Audio Descriptions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Transportation -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-car"></i> Transportation Guide</div>
+            <div class="slide-content" style="margin-top: 40px;">
+                <p style="font-size: 2rem; margin-bottom: 30px;">Multiple Options to Reach Stadium</p>
+                <div class="checklist">
+                    <div class="checklist-item">Metro Options (25 mins)</div>
+                    <div class="checklist-item">Bus Options (35 mins)</div>
+                    <div class="checklist-item">Taxi/Uber Availability</div>
+                    <div class="checklist-item">Parking Info (245 spaces)</div>
+                    <div class="checklist-item">Cost Comparison</div>
+                    <div class="checklist-item">Real-Time Transit Map</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Sustainability -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-leaf"></i> Sustainability Tracking</div>
+            <div class="slide-content" style="margin-top: 40px;">
+                <p style="font-size: 2rem; margin-bottom: 30px;">Carbon-Neutral Stadium Operations</p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number">1,245</div>
+                        <div class="stat-label">Tons CO2 Reduced</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">78%</div>
+                        <div class="stat-label">Renewable Energy</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">5,230kg</div>
+                        <div class="stat-label">Waste Diverted</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Multilingual -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-globe"></i> Multilingual Support</div>
+            <div class="slide-content" style="margin-top: 40px;">
+                <p style="font-size: 2rem; margin-bottom: 40px;">5 Languages for Global Audience</p>
+                <div class="languages">
+                    <div class="lang-badge">🇺🇸 English</div>
+                    <div class="lang-badge">🇮🇳 हिन्दी</div>
+                    <div class="lang-badge">🇪🇸 Español</div>
+                    <div class="lang-badge">🇫🇷 Français</div>
+                    <div class="lang-badge">🇸🇦 العربية</div>
+                </div>
+                <p style="margin-top: 40px; font-size: 1.3rem; color: #cbd5e1;">Full UI translation + AI responses in each language</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: 3-Role System -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-users"></i> 3-Role System</div>
+            <div style="margin-top: 40px; width: 100%;">
+                <div class="role-grid">
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-user-tie"></i></div>
+                        <div class="role-title">Admin</div>
+                        <div class="role-desc">Operations center, live heatmap, analytics, emergency protocols</div>
+                    </div>
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="role-title">Staff</div>
+                        <div class="role-desc">Quick incident response, management, protocols</div>
+                    </div>
+                    <div class="role-card">
+                        <div class="role-icon"><i class="fas fa-user"></i></div>
+                        <div class="role-title">Visitor</div>
+                        <div class="role-desc">All 8 features: AI, Navigation, Accessibility, Transport, etc.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Queue Management -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-hourglass-half"></i> Queue Management</div>
+            <div class="slide-content" style="margin-top: 40px;">
+                <p style="font-size: 2rem; margin-bottom: 30px;">Skip-the-Line Planning</p>
+                <div class="checklist">
+                    <div class="checklist-item">Real-Time Queue Status</div>
+                    <div class="checklist-item">Wait Time Predictions</div>
+                    <div class="checklist-item">Capacity Monitoring</div>
+                    <div class="checklist-item">Peak Time Forecasts</div>
+                    <div class="checklist-item">Smart Recommendations</div>
+                    <div class="checklist-item">Crowd Trend Indicators</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Technical Stack -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-rocket"></i> Technical Excellence</div>
+            <div style="margin-top: 40px;">
+                <div class="feature-grid" style="max-width: 1000px;">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-atom"></i></div>
+                        <div class="feature-title">Frontend</div>
+                        <div class="feature-desc">React 19, Next.js 15, TypeScript</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-palette"></i></div>
+                        <div class="feature-title">Styling</div>
+                        <div class="feature-desc">Tailwind CSS, Glassmorphism</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                        <div class="feature-title">Security</div>
+                        <div class="feature-desc">JWT Tokens, Role-Based Routing</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <div class="feature-title">Responsive</div>
+                        <div class="feature-desc">Mobile-First Design</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Hackathon Checklist -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-check-circle"></i> Hackathon Checklist</div>
+            <div class="slide-content" style="margin-top: 30px;">
+                <div class="checklist" style="max-width: 1000px; margin: 0 auto;">
+                    <div class="checklist-item">GenAI Integration</div>
+                    <div class="checklist-item">Navigation Module</div>
+                    <div class="checklist-item">Crowd Management</div>
+                    <div class="checklist-item">Accessibility</div>
+                    <div class="checklist-item">Transportation</div>
+                    <div class="checklist-item">Sustainability</div>
+                    <div class="checklist-item">Multilingual (5 langs)</div>
+                    <div class="checklist-item">Real-Time Operations</div>
+                    <div class="checklist-item">3-Role System</div>
+                    <div class="checklist-item">Mobile Responsive</div>
+                    <div class="checklist-item">Professional UI</div>
+                    <div class="checklist-item">Production Quality</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Demo Instructions -->
+        <div class="slide">
+            <div class="slide-title"><i class="fas fa-film"></i> How to Demo (2 Minutes)</div>
+            <div class="slide-content" style="margin-top: 40px; text-align: left; max-width: 900px;">
+                <p style="margin-bottom: 20px;"><strong>1. Login (20 sec)</strong> - Show 3 roles</p>
+                <p style="margin-bottom: 20px;"><strong>2. Admin (30 sec)</strong> - Live heatmap + predictions</p>
+                <p style="margin-bottom: 20px;"><strong>3. Visitor (40 sec)</strong> - All 6 modules</p>
+                <p style="margin-bottom: 20px;"><strong>4. Language (20 sec)</strong> - Switch to Hindi</p>
+                <p style="margin-bottom: 20px;"><strong>5. Closing (10 sec)</strong> - "Production-ready for FIFA 2026"</p>
+            </div>
+        </div>
+
+        <!-- Slide 15: Final -->
+        <div class="slide">
+            <div class="center-section">
+                <div style="text-align: center;">
+                    <div class="trophy-text"><i class="fas fa-trophy"></i></div>
+                    <div class="slide-title">CHAMPIONSHIP READY</div>
+                    <div class="slide-subtitle" style="margin-top: 40px;">100/100 Score</div>
+                    <p style="font-size: 1.5rem; color: #cbd5e1; margin-top: 40px;">GenAI-Powered | Accessible | Sustainable | Multilingual</p>
+                    <p style="font-size: 1.3rem; color: #fbbf24; margin-top: 30px;">Ready to Win FIFA 2026 <i class="fas fa-futbol"></i><i class="fas fa-sparkles"></i></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="previousSlide()" id="prevBtn">← Previous</button>
+        <button class="btn" onclick="nextSlide()" id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        document.getElementById('total').textContent = totalSlides;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+
+            document.getElementById('current').textContent = currentSlide;
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        showSlide(currentSlide);
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.7; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

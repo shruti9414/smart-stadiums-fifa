@@ -1,0 +1,21 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "OPENAI_API_KEY": "@openai_api_key",
+    "AUTH_SECRET": "@auth_secret",
+    "NEXT_PUBLIC_API_URL": "@next_public_api_url"
+  },
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "regions": ["iad1"],
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  }
+}
