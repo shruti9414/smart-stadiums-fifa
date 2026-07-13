@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { LanguageSelector } from './LanguageSelector'
 import { useLanguage, type Language } from '@/hooks/useLanguage'
 import { useAuth } from '@/hooks/useAuth'
@@ -141,11 +143,31 @@ export function Sidebar() {
     <aside className="w-72 h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black border-r border-slate-800/50 fixed left-0 top-0 flex flex-col backdrop-blur-sm">
       {/* Top Section - Fixed */}
       <div className="p-8 border-b border-slate-800/30 flex-shrink-0">
-        {/* Logo Section */}
+        {/* Logo Section with 3D Effect */}
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-lg font-bold">
-            ⚡
-          </div>
+          <motion.div
+            animate={{
+              rotateY: [0, 360],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+            style={{
+              perspective: '1000px',
+            }}
+            className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"
+          >
+            <Image
+              src="/stadium-logo.png"
+              alt="Stadium Logo"
+              width={48}
+              height={48}
+              className="w-full h-full object-cover"
+              priority
+            />
+          </motion.div>
           <div>
             <h1 className="text-xl font-bold gradient-text">Smart Stadiums</h1>
           </div>

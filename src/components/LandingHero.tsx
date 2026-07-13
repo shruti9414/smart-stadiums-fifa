@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Zap, Globe, Users, Shield, Cpu, TrendingUp, ArrowRight } from 'lucide-react'
 
@@ -50,6 +51,34 @@ export function LandingHero() {
         initial="hidden"
         animate="visible"
       >
+        {/* 3D Stadium Logo */}
+        <motion.div
+          variants={itemVariants}
+          className="mb-12 flex justify-center"
+          animate={{
+            rotateY: [0, 360],
+            rotateX: [0, 5, -5, 0],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          style={{
+            perspective: '1200px',
+          }}
+        >
+          <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-xl overflow-hidden shadow-2xl shadow-red-500/40 border-2 border-red-500/50 bg-gradient-to-br from-red-500/20 to-cyan-500/20 backdrop-blur-sm">
+            <Image
+              src="/stadium-logo.png"
+              alt="Stadium Logo"
+              fill
+              className="object-cover hover:scale-110 transition-transform duration-300"
+              priority
+            />
+          </div>
+        </motion.div>
+
         {/* Badge - MUCH BIGGER */}
         <motion.div variants={itemVariants} className="mb-10">
           <div className="inline-block">
