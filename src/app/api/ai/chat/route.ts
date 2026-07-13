@@ -206,28 +206,19 @@ export async function POST(req: NextRequest) {
     let tokensUsed = 0
 
     try {
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+      // Try gemini-pro first (most compatible)
+      let model = genAI.getGenerativeModel({ model: 'gemini-pro' })
 
-      // Build conversation history for Gemini
-      const history = recentMessages
+      // Build complete prompt with context
+      const conversationContext = recentMessages
         .filter((m) => m.id !== undefined)
-        .map((m) => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.content }],
-        }))
+        .map((m) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+        .join('\n')
 
-      // Start chat session with history
-      const chat = model.startChat({
-        history: history as any,
-        generationConfig: {
-          maxOutputTokens: maxOutputTokens,
-          temperature: 0.7,
-          topP: 0.9,
-        },
-      })
+      const fullPrompt = `${systemPrompt}\n\nPrevious conversation:\n${conversationContext}\n\nUser: ${message}\n\nAssistant:`
 
-      // Send current message
-      const result = await chat.sendMessage(message)
+      // Use generateContent directly (more compatible)
+      const result = await model.generateContent(fullPrompt)
       const response = await result.response
       aiResponse = response.text() || '🤔 I could not generate a response. Please try again.'
 
@@ -245,6 +236,10 @@ export async function POST(req: NextRequest) {
         throw new Error('Google Gemini API key is invalid. Check GOOGLE_AI_API_KEY in .env')
       } else if (geminiError.message?.includes('429') || geminiError.message?.includes('quota')) {
         aiResponse = '⏳ API quota exceeded. Please wait a moment and try again.'
+      } else if (geminiError.message?.includes('404') || geminiError.message?.includes('not found')) {
+        // Fallback for model not found
+        console.warn('Gemini model not available, using fallback response')
+        aiResponse = `ℹ️ AI service temporarily unavailable. Stadium info: ${STADIUM_CONTEXT.amenities.restrooms}`
       } else {
         throw geminiError
       }
