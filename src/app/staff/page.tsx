@@ -38,6 +38,7 @@ export default function StaffPage() {
   const [isChecking, setIsChecking] = useState(true)
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(null)
   const [activeTab, setActiveTab] = useState<'incidents' | 'teams'>('incidents')
+  const [incidentFilter, setIncidentFilter] = useState<'all' | 'responding' | 'resolved'>('all')
   const [resources, setResources] = useState<TeamResource[]>([])
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [currentTime, setCurrentTime] = useState('')
@@ -463,13 +464,40 @@ export default function StaffPage() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
+              {/* Incident Filter Tabs */}
+              <div className="flex gap-2 mb-6 flex-wrap">
+                {[
+                  { label: '📋 All', value: 'all' as const },
+                  { label: '🔄 Responding', value: 'responding' as const },
+                  { label: '✅ Resolved', value: 'resolved' as const },
+                ].map(tab => (
+                  <motion.button
+                    key={tab.value}
+                    onClick={() => setIncidentFilter(tab.value)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                      incidentFilter === tab.value
+                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg'
+                        : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50'
+                    }`}
+                  >
+                    {tab.label}
+                  </motion.button>
+                ))}
+              </div>
+
               <motion.div
                 className="grid md:grid-cols-2 lg:grid-cols-4 gap-4"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
               >
-                {incidents.map((incident) => {
+                {incidents
+                  .filter(incident =>
+                    incidentFilter === 'all' ? true : incident.status === incidentFilter
+                  )
+                  .map((incident) => {
                   const config = getSeverityConfig(incident.severity)
                   const isAnimating = incident.severity === 'critical'
 
