@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
           userId: (payload as any).userId || 'visitor',
           stadiumId: 'lusail-2026', // Could be dynamic
           topic: message.substring(0, 50),
-          language: selectedLanguage,
+          // language: selectedLanguage, // TODO: Add after DB migration
         },
       })
     }
