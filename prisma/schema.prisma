@@ -172,6 +172,7 @@ model AIConversation {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   stadiumId   String
   topic       String?
+  language    String    @default("en")
   context     Json?
   tokenUsed   Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -180,6 +181,7 @@ model AIConversation {
   messages    AIMessage[]
 
   @@index([userId, createdAt])
+  @@index([language])
 }
 
 model AIMessage {
@@ -255,18 +257,33 @@ model Dispatch {
   @@index([dispatchedAt])
 }
 
-model UserNotification {
+model Notification {
   id          String    @id @default(cuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type        String
   title       String
-  message     String    @db.Text
-  actionUrl   String?
-  isRead      Boolean   @default(false)
-  createdAt   DateTime  @default(now())
+  body        String    @db.Text
+  type        String    @default("info")
+  data        String?   @db.Text
+  sentBy      String
+  sentAt      DateTime  @default(now())
 
-  @@index([userId, isRead])
+  userNotifications UserNotification[]
+
+  @@index([type, sentAt])
+}
+
+model UserNotification {
+  id              String    @id @default(cuid())
+  notificationId  String
+  notification    Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  read            Boolean   @default(false)
+  readAt          DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([userId, read])
+  @@index([notificationId])
+  @@unique([notificationId, userId])
 }
 
 model PushNotificationToken {

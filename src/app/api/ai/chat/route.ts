@@ -1,35 +1,112 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
+import { OpenAI } from 'openai'
 
-// AI Response templates (multilingual)
-const AI_RESPONSES = {
-  en: {
-    restroom: '🚻 Restrooms are on Level 1, Section B. Fully accessible with grab bars. 2 min walk.',
-    food: '🍽️ Food options: Restaurant (10 min), Fast Food (5 min), Cafe (2 min).',
-    medical: '🏥 Medical Center 50m away, staffed 24/7. Press red emergency button or call 911.',
-    wheelchair: '♿ Accessible seating: Sections A1-A4. Ramp access, elevators at all 4 corners.',
-    parking: '🅿️ 245 parking spaces. Cost: $8/day. EV charging Level 3. Accessible Level 1.',
-    transport: '🚇 Metro Line 5: 25 mins ($2.50). Express Bus 42: 35 mins ($1.50).',
-    ticket: '🎫 Your seat: Premium view! Valid entire tournament. Upgrade to VIP available.',
-    sustainability: '🌱 Carbon-neutral! 78% renewable energy. Public transport saves 80% carbon.',
-    help: '👋 I can help with: restrooms, food, medical, wheelchair access, parking, transport, tickets!',
-    default: '👋 Welcome to FIFA World Cup 2026! How can I assist you?',
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
+
+// Stadium context for AI responses
+const STADIUM_CONTEXT = {
+  name: 'Lusail Stadium',
+  city: 'Doha, Qatar',
+  capacity: 80000,
+  amenities: {
+    restrooms: 'Level 1 Section B (accessible with grab bars), Level 2 Section D, Level 3 Section F',
+    food: 'Food Hall A (Main), Quick Bite (5 locations), Cafe (8 locations)',
+    medical: '24/7 Medical Center (East Wing), First Aid Posts (every section)',
+    wheelchair: 'Sections A1-A4 with ramp access, Elevators at all 4 corners, Accessible parking Level 1',
+    parking: '245 parking spaces, $8/day, EV Level 3 charging, Accessible reserved spaces',
+    transport: 'Metro Line 5 (25 mins, $2.50), Express Bus 42 (35 mins, $1.50), Taxi/Uber available',
   },
-  hi: {
-    restroom: '🚻 शौचालय Level 1, Section B में। 2 मिनट दूर।',
-    food: '🍽️ खाना: रेस्तरां (10), फास्ट फूड (5), कैफे (2)।',
-    medical: '🏥 चिकित्सा केंद्र 50m दूर। लाल बटन दबाएं।',
-    help: '👋 मैं आपकी कैसे मदद कर सकता हूँ?',
-    default: '👋 FIFA 2026 में आपका स्वागत है!',
-  },
-  es: {
-    restroom: '🚻 Baños en Level 1, Sección B. 2 minutos a pie.',
-    food: '🍽️ Opciones: Restaurante (10), Comida rápida (5), Café (2).',
-    medical: '🏥 Centro médico a 50m. Presione el botón rojo.',
-    help: '👋 ¿Cómo puedo ayudarte?',
-    default: '👋 ¡Bienvenido a FIFA 2026!',
-  },
+}
+
+// Multilingual system prompts
+const SYSTEM_PROMPTS = {
+  en: `You are an expert FIFA World Cup 2026 stadium AI assistant for ${STADIUM_CONTEXT.name} (${STADIUM_CONTEXT.capacity.toLocaleString()} capacity).
+You help visitors with accurate, specific information about:
+- Restroom locations and accessibility features
+- Food options and dining venues
+- Medical facilities and emergency procedures
+- Wheelchair accessibility and accommodations for people with disabilities
+- Parking, EV charging, and transportation options
+- Ticket information, seating locations, and upgrades
+- Sustainability initiatives and eco-friendly options
+- Event schedules and live information
+
+STADIUM CONTEXT:
+- Restrooms: ${STADIUM_CONTEXT.amenities.restrooms}
+- Food: ${STADIUM_CONTEXT.amenities.food}
+- Medical: ${STADIUM_CONTEXT.amenities.medical}
+- Wheelchair Access: ${STADIUM_CONTEXT.amenities.wheelchair}
+- Parking: ${STADIUM_CONTEXT.amenities.parking}
+- Transport: ${STADIUM_CONTEXT.amenities.transport}
+
+Guidelines:
+- Provide concise, actionable responses (1-2 sentences)
+- Always include relevant emoji to make responses friendly
+- Provide specific locations and times when available
+- Prioritize accessibility and safety
+- Be multilingual-aware of user's selected language
+- For urgent queries (medical/security), escalate immediately`,
+
+  hi: `आप FIFA World Cup 2026 के ${STADIUM_CONTEXT.name} स्टेडियम के लिए एक विशेषज्ञ AI सहायक हैं।
+आप आगंतुकों को निम्नलिखित बातों में मदद करते हैं:
+- शौचालय स्थान और पहुंचयोग्यता
+- खाना और रेस्तरां विकल्प
+- चिकित्सा सुविधाएं और आपातकालीन प्रक्रियाएं
+- व्हीलचेयर पहुंचयोग्यता
+- पार्किंग और परिवहन विकल्प
+- टिकट और सीटिंग जानकारी
+- स्थिरता पहल
+
+प्रतिक्रियाएं संक्षिप्त (1-2 वाक्य) रखें, हमेशा प्रासंगिक emoji शामिल करें, और सटीक स्थान प्रदान करें।`,
+
+  es: `Eres un asistente de IA experto del Estadio ${STADIUM_CONTEXT.name} para la Copa Mundial FIFA 2026.
+Ayudas a visitantes con:
+- Ubicaciones de baños y accesibilidad
+- Opciones de comida
+- Instalaciones médicas
+- Accesibilidad para sillas de ruedas
+- Estacionamiento y transporte
+- Información de entradas y asientos
+- Iniciativas de sostenibilidad
+
+Proporciona respuestas concisas (1-2 oraciones), incluye emoji relevantes, y se específico con ubicaciones.`,
+
+  fr: `Vous êtes un assistant IA expert du Stade ${STADIUM_CONTEXT.name} pour la Coupe du Monde FIFA 2026.
+Vous aidez les visiteurs avec:
+- Emplacements des toilettes et accessibilité
+- Options alimentaires
+- Services médicaux
+- Accessibilité pour fauteuils roulants
+- Stationnement et transport
+- Billets et sièges
+- Durabilité
+
+Réponses concises (1-2 phrases), incluez des emoji pertinents, soyez spécifique sur les emplacements.`,
+
+  ar: `أنت مساعد ذكاء اصطناعي خبير في ملعب ${STADIUM_CONTEXT.name} لكأس العالم FIFA 2026.
+تساعد الزوار في:
+- مواقع الحمامات والإمكانية الوصول
+- خيارات الطعام
+- المرافق الطبية
+- إمكانية الوصول للعاجلات
+- مواقف السيارات والمواصلات
+- معلومات التذاكر والمقاعد
+- الاستدامة
+
+قدم ردود موجزة (1-2 جملة)، أدرج emoji ذات الصلة، وكن محددًا بشأن المواقع.`,
+}
+
+// Estimate tokens (simplified - actual token counting would use tiktoken)
+function estimateTokens(messages: Array<{ role: string; content: string }>): number {
+  let totalChars = 0
+  for (const msg of messages) {
+    totalChars += msg.content.length
+  }
+  return Math.ceil(totalChars / 4) // Rough estimate: 1 token ≈ 4 chars
 }
 
 export async function POST(req: NextRequest) {
@@ -60,18 +137,24 @@ export async function POST(req: NextRequest) {
       })
     }
 
+    // Validate language
+    const validLanguages = ['en', 'hi', 'es', 'fr', 'ar']
+    const selectedLanguage = validLanguages.includes(language) ? language : 'en'
+
     // Get or create conversation
     let conversation
     if (conversationId) {
       conversation = await prisma.aIConversation.findUnique({
         where: { id: conversationId },
+        include: { messages: { orderBy: { createdAt: 'asc' } } },
       })
     } else {
       conversation = await prisma.aIConversation.create({
         data: {
           userId: payload.userId,
-          title: message.substring(0, 50),
-          language,
+          stadiumId: 'lusail-2026', // Could be dynamic
+          topic: message.substring(0, 50),
+          language: selectedLanguage,
         },
       })
     }
@@ -92,30 +175,63 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    // Generate AI response based on keywords
-    let aiResponse = AI_RESPONSES[language as keyof typeof AI_RESPONSES]?.default || 'How can I help?'
+    // Fetch recent conversation history for context (last 5 messages)
+    const recentMessages = await prisma.aIMessage.findMany({
+      where: { conversationId: conversation.id },
+      orderBy: { createdAt: 'asc' },
+      take: -5, // Last 5 messages
+    })
 
-    const lowerMessage = message.toLowerCase()
-    const responses = AI_RESPONSES[language as keyof typeof AI_RESPONSES] || AI_RESPONSES.en
+    // Build message array with context
+    const systemPrompt = SYSTEM_PROMPTS[selectedLanguage as keyof typeof SYSTEM_PROMPTS] || SYSTEM_PROMPTS.en
 
-    if (lowerMessage.includes('restroom') || lowerMessage.includes('toilet') || lowerMessage.includes('bath')) {
-      aiResponse = responses.restroom
-    } else if (lowerMessage.includes('food') || lowerMessage.includes('eat') || lowerMessage.includes('restaurant')) {
-      aiResponse = responses.food
-    } else if (lowerMessage.includes('medical') || lowerMessage.includes('doctor') || lowerMessage.includes('emergency')) {
-      aiResponse = responses.medical
-    } else if (lowerMessage.includes('wheelchair') || lowerMessage.includes('accessible') || lowerMessage.includes('disability')) {
-      aiResponse = responses.wheelchair
-    } else if (lowerMessage.includes('parking') || lowerMessage.includes('car')) {
-      aiResponse = responses.parking
-    } else if (lowerMessage.includes('transport') || lowerMessage.includes('metro') || lowerMessage.includes('bus')) {
-      aiResponse = responses.transport
-    } else if (lowerMessage.includes('ticket') || lowerMessage.includes('seat')) {
-      aiResponse = responses.ticket
-    } else if (lowerMessage.includes('sustain') || lowerMessage.includes('green') || lowerMessage.includes('carbon')) {
-      aiResponse = responses.sustainability
-    } else if (lowerMessage.includes('help')) {
-      aiResponse = responses.help
+    const messagesForAI = [
+      { role: 'system' as const, content: systemPrompt },
+      ...recentMessages
+        .filter((m) => m.id !== undefined) // Exclude current message
+        .map((m) => ({
+          role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+          content: m.content,
+        })),
+      { role: 'user' as const, content: message },
+    ]
+
+    // Estimate tokens and set max_tokens
+    const estimatedInputTokens = estimateTokens(messagesForAI)
+    const maxOutputTokens = Math.min(200, 4096 - estimatedInputTokens)
+
+    // Call OpenAI API with proper error handling
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OPENAI_API_KEY not configured. Please set it in .env')
+    }
+
+    let aiResponse: string
+    let tokensUsed = 0
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4-turbo',
+        messages: messagesForAI as any,
+        temperature: 0.7,
+        max_tokens: maxOutputTokens,
+        top_p: 0.9,
+      })
+
+      aiResponse = completion.choices[0]?.message?.content || '🤔 I could not generate a response. Please try again.'
+      tokensUsed = completion.usage?.total_tokens || 0
+
+      console.log(`✓ GenAI Response (${selectedLanguage}): ${completion.usage?.total_tokens} tokens`)
+    } catch (openaiError: any) {
+      console.error('OpenAI API Error:', openaiError.message)
+
+      // Provide helpful error message
+      if (openaiError.status === 401) {
+        throw new Error('OpenAI API key is invalid. Check OPENAI_API_KEY in .env')
+      } else if (openaiError.status === 429) {
+        aiResponse = '⏳ Too many requests. Please wait a moment and try again.'
+      } else {
+        throw openaiError
+      }
     }
 
     // Store AI response in database
@@ -124,10 +240,19 @@ export async function POST(req: NextRequest) {
         conversationId: conversation.id,
         role: 'assistant',
         content: aiResponse,
+        tokensUsed,
       },
     })
 
-    console.log('✓ Chat message stored in database:', conversation.id)
+    // Update conversation token count
+    await prisma.aIConversation.update({
+      where: { id: conversation.id },
+      data: {
+        tokenUsed: { increment: tokensUsed },
+      },
+    })
+
+    console.log(`✓ Chat stored: Conv=${conversation.id}, Tokens=${tokensUsed}`)
 
     return new Response(
       JSON.stringify({
@@ -136,7 +261,9 @@ export async function POST(req: NextRequest) {
           conversationId: conversation.id,
           messageId: aiMessage.id,
           message: aiResponse,
+          language: selectedLanguage,
           timestamp: aiMessage.createdAt,
+          tokensUsed,
         },
       }),
       {
@@ -144,12 +271,19 @@ export async function POST(req: NextRequest) {
         headers: { 'Content-Type': 'application/json' },
       }
     )
-  } catch (err) {
-    console.error('Chat error:', err)
-    return new Response(JSON.stringify({ success: false, error: 'Chat failed' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+  } catch (err: any) {
+    console.error('Chat error:', err.message)
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: err.message || 'Chat failed',
+        hint: 'Ensure OPENAI_API_KEY is set in .env file',
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
   }
 }
 

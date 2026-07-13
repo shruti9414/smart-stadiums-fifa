@@ -15,6 +15,7 @@ const PUBLIC_MENU_ITEMS = [
   { href: '/dashboard/navigate', key: 'navigation', icon: '🗺️' },
   { href: '/dashboard/accessibility', key: 'accessibility', icon: '♿' },
   { href: '/dashboard/transport', key: 'transport', icon: '🚗' },
+  { href: '/dashboard/sustainability', key: 'sustainability', icon: '🌱' },
 ]
 
 // Admin-only links
