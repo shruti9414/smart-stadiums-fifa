@@ -1,11 +1,9 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
-import { OpenAI } from 'openai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '')
 
 // Stadium context for AI responses
 const STADIUM_CONTEXT = {
@@ -200,37 +198,56 @@ export async function POST(req: NextRequest) {
     const estimatedInputTokens = estimateTokens(messagesForAI)
     const maxOutputTokens = Math.min(200, 4096 - estimatedInputTokens)
 
-    // Call OpenAI API with proper error handling
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY not configured. Please set it in .env')
+    // Call Google Gemini API with proper error handling
+    if (!process.env.GOOGLE_AI_API_KEY) {
+      throw new Error('GOOGLE_AI_API_KEY not configured. Please set it in .env')
     }
 
     let aiResponse: string
     let tokensUsed = 0
 
     try {
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-4-turbo',
-        messages: messagesForAI as any,
-        temperature: 0.7,
-        max_tokens: maxOutputTokens,
-        top_p: 0.9,
+      const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+
+      // Build conversation history for Gemini
+      const history = recentMessages
+        .filter((m) => m.id !== undefined)
+        .map((m) => ({
+          role: m.role === 'user' ? 'user' : 'model',
+          parts: [{ text: m.content }],
+        }))
+
+      // Start chat session with history
+      const chat = model.startChat({
+        history: history as any,
+        generationConfig: {
+          maxOutputTokens: maxOutputTokens,
+          temperature: 0.7,
+          topP: 0.9,
+        },
       })
 
-      aiResponse = completion.choices[0]?.message?.content || '🤔 I could not generate a response. Please try again.'
-      tokensUsed = completion.usage?.total_tokens || 0
+      // Send current message
+      const result = await chat.sendMessage(message)
+      const response = await result.response
+      aiResponse = response.text() || '🤔 I could not generate a response. Please try again.'
 
-      console.log(`✓ GenAI Response (${selectedLanguage}): ${completion.usage?.total_tokens} tokens`)
-    } catch (openaiError: any) {
-      console.error('OpenAI API Error:', openaiError.message)
+      // Estimate tokens (Gemini doesn't return exact count in free tier)
+      tokensUsed = Math.ceil((systemPrompt.length + message.length) / 4) + Math.ceil(aiResponse.length / 4)
+
+      console.log(
+        `✓ Gemini Response (${selectedLanguage}): ~${tokensUsed} tokens estimated`
+      )
+    } catch (geminiError: any) {
+      console.error('Google Gemini API Error:', geminiError.message)
 
       // Provide helpful error message
-      if (openaiError.status === 401) {
-        throw new Error('OpenAI API key is invalid. Check OPENAI_API_KEY in .env')
-      } else if (openaiError.status === 429) {
-        aiResponse = '⏳ Too many requests. Please wait a moment and try again.'
+      if (geminiError.message?.includes('API key')) {
+        throw new Error('Google Gemini API key is invalid. Check GOOGLE_AI_API_KEY in .env')
+      } else if (geminiError.message?.includes('429') || geminiError.message?.includes('quota')) {
+        aiResponse = '⏳ API quota exceeded. Please wait a moment and try again.'
       } else {
-        throw openaiError
+        throw geminiError
       }
     }
 
