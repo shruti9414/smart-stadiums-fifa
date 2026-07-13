@@ -7,7 +7,7 @@ import { Universe3D } from '@/components/Universe3D'
 import { LoginCard3D } from '@/components/LoginCard3D'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { UserPlus, AlertCircle, Loader, Shield, Smartphone, MapPin, Bell } from 'lucide-react'
+import { UserPlus, AlertCircle, Loader, Shield, Smartphone, MapPin, Bell, Eye, EyeOff } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -19,6 +19,8 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(true)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const handlePasswordChange = (value: string) => {
     setPassword(value)
@@ -232,14 +234,23 @@ export default function RegisterPage() {
                         <label className="block text-xs font-bold text-gray-300 mb-3 uppercase tracking-wider">
                           🔐 Password
                         </label>
-                        <input
-                          type="password"
-                          value={password}
-                          onChange={(e) => handlePasswordChange(e.target.value)}
-                          placeholder="••••••••"
-                          className="w-full px-5 py-3 bg-white/5 backdrop-blur-xl border border-white/20 hover:border-teal-500/30 focus:border-teal-500/60 rounded-xl text-white placeholder:text-gray-600 transition-all duration-300 outline-none group/input"
-                          required
-                        />
+                        <div className="relative group/input">
+                          <input
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => handlePasswordChange(e.target.value)}
+                            placeholder="••••••••"
+                            className="w-full px-5 py-3 pr-12 bg-white/5 backdrop-blur-xl border border-white/20 hover:border-teal-500/30 focus:border-teal-500/60 rounded-xl text-white placeholder:text-gray-600 transition-all duration-300 outline-none"
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-teal-400 transition-colors"
+                          >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </button>
+                        </div>
                         <p className="text-xs text-gray-500 mt-2">Minimum 6 characters</p>
                       </motion.div>
 
@@ -252,18 +263,27 @@ export default function RegisterPage() {
                         <label className="block text-xs font-bold text-gray-300 mb-3 uppercase tracking-wider">
                           ✓ Confirm Password
                         </label>
-                        <input
-                          type="password"
-                          value={confirmPassword}
-                          onChange={(e) => handleConfirmPasswordChange(e.target.value)}
-                          placeholder="••••••••"
-                          className={`w-full px-5 py-3 bg-white/5 backdrop-blur-xl border transition-all duration-300 rounded-xl text-white placeholder:text-gray-600 outline-none group/input ${
-                            confirmPassword && !passwordMatch
-                              ? 'border-red-500/60 hover:border-red-500/80'
-                              : 'border-white/20 hover:border-teal-500/30 focus:border-teal-500/60'
-                          }`}
-                          required
-                        />
+                        <div className="relative group/input">
+                          <input
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            value={confirmPassword}
+                            onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+                            placeholder="••••••••"
+                            className={`w-full px-5 py-3 pr-12 bg-white/5 backdrop-blur-xl border transition-all duration-300 rounded-xl text-white placeholder:text-gray-600 outline-none ${
+                              confirmPassword && !passwordMatch
+                                ? 'border-red-500/60 hover:border-red-500/80'
+                                : 'border-white/20 hover:border-teal-500/30 focus:border-teal-500/60'
+                            }`}
+                            required
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-teal-400 transition-colors"
+                          >
+                            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </button>
+                        </div>
                         {confirmPassword && !passwordMatch && (
                           <p className="text-xs text-red-400 mt-2">❌ Passwords do not match</p>
                         )}
