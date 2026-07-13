@@ -3,7 +3,15 @@ import { prisma } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '')
+// Initialize Gemini AI lazily to avoid build-time errors
+let genAI: GoogleGenerativeAI | null = null
+
+function getGenAI() {
+  if (!genAI) {
+    genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '')
+  }
+  return genAI
+}
 
 // Stadium context for AI responses
 const STADIUM_CONTEXT = {
@@ -207,7 +215,7 @@ export async function POST(req: NextRequest) {
 
     try {
       // Try gemini-pro first (most compatible)
-      let model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+      let model = getGenAI().getGenerativeModel({ model: 'gemini-pro' })
 
       // Build complete prompt with context
       const conversationContext = recentMessages

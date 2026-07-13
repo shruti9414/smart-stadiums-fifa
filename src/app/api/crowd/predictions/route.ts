@@ -4,7 +4,15 @@ import { verifyToken } from '@/lib/auth'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { Prisma } from '@prisma/client'
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '')
+// Initialize Gemini AI lazily to avoid build-time errors
+let genAI: GoogleGenerativeAI | null = null
+
+function getGenAI() {
+  if (!genAI) {
+    genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '')
+  }
+  return genAI
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -55,7 +63,7 @@ export async function GET(req: NextRequest) {
       }))
     } else {
       // Generate new predictions using Gemini AI with crowd context
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+      const model = getGenAI().getGenerativeModel({ model: 'gemini-pro' })
 
       const crowdContext = recentCrowd.length > 0
         ? `Recent crowd data: ${recentCrowd
