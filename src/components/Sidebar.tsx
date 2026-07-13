@@ -142,38 +142,38 @@ export function Sidebar() {
   return (
     <aside className="w-72 h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-black border-r border-slate-800/50 fixed left-0 top-0 flex flex-col backdrop-blur-sm">
       {/* Top Section - Fixed */}
-      <div className="p-8 border-b border-slate-800/30 flex-shrink-0">
-        {/* Logo Section with 3D Effect */}
-        <div className="flex items-center gap-3 mb-3">
+      <div className="p-6 border-b border-slate-800/30 flex-shrink-0">
+        {/* Logo Section with Branding */}
+        <div className="flex items-start gap-4 mb-4">
+          {/* SDD Logo - Bigger */}
           <motion.div
             animate={{
-              rotateY: [0, 360],
+              y: [0, -8, 0],
             }}
             transition={{
-              duration: 8,
+              duration: 3,
               repeat: Infinity,
-              ease: 'linear',
+              ease: 'easeInOut',
             }}
-            style={{
-              perspective: '1000px',
-            }}
-            className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0"
+            className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 shadow-lg shadow-red-500/20 border border-slate-700/50"
           >
             <Image
-              src="/stadium-logo.png"
-              alt="Stadium Logo"
-              width={48}
-              height={48}
+              src="/sdd-logo.png"
+              alt="SDD Logo"
+              width={64}
+              height={64}
               className="w-full h-full object-cover"
               priority
             />
           </motion.div>
-          <div>
-            <h1 className="text-xl font-bold gradient-text">Smart Stadiums</h1>
+
+          {/* Text Section */}
+          <div className="flex-1">
+            <h1 className="text-lg font-black gradient-text leading-tight">Smart Stadiums</h1>
+            <p className="text-xs text-slate-400 mt-0.5">FIFA 2026</p>
           </div>
         </div>
-        <p className="text-xs text-slate-500">FIFA World Cup 2026</p>
-        {user && <p className="text-xs text-yellow-400 mt-2 capitalize">👤 {user.role}</p>}
+        {user && <p className="text-xs text-yellow-400 capitalize">👤 {user.role}</p>}
       </div>
 
       {/* Scrollable Navigation */}
