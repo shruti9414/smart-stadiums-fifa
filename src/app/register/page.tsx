@@ -300,7 +300,7 @@ export default function RegisterPage() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         type="submit"
-                        disabled={loading || (confirmPassword && !passwordMatch)}
+                        disabled={loading || Boolean(confirmPassword && !passwordMatch)}
                         className="w-full mt-8 py-3 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 disabled:opacity-50 text-white font-black rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group hover:shadow-2xl hover:shadow-emerald-500/50"
                       >
                         {loading ? (
