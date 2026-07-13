@@ -7,7 +7,7 @@ import { Universe3D } from '@/components/Universe3D'
 import { LoginCard3D } from '@/components/LoginCard3D'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { LogIn, AlertCircle, Loader, Shield, Zap } from 'lucide-react'
+import { LogIn, AlertCircle, Loader, Shield, Zap, Settings, Radar, Users } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -57,7 +57,6 @@ export default function LoginPage() {
   const demoAccounts = [
     {
       role: 'admin' as const,
-      icon: '⚙️',
       label: 'Operations Admin',
       email: 'admin@stadium.com',
       password: 'Admin@12345',
@@ -66,11 +65,10 @@ export default function LoginPage() {
       accentColor: 'text-red-400',
       borderColor: 'border-red-500/50',
       bgColor: 'bg-red-500/10',
-      description: '🏛️ Command Center',
+      description: 'Command Center',
     },
     {
       role: 'staff' as const,
-      icon: '🚀',
       label: 'Security Team',
       email: 'staff@stadium.com',
       password: 'Staff@12345',
@@ -79,11 +77,10 @@ export default function LoginPage() {
       accentColor: 'text-cyan-400',
       borderColor: 'border-cyan-500/50',
       bgColor: 'bg-cyan-500/10',
-      description: '🛡️ Quick Response',
+      description: 'Quick Response',
     },
     {
       role: 'visitor' as const,
-      icon: '🎯',
       label: 'Visitor Access',
       email: 'visitor@stadium.com',
       password: 'Visitor@12345',
@@ -92,9 +89,20 @@ export default function LoginPage() {
       accentColor: 'text-emerald-400',
       borderColor: 'border-emerald-500/50',
       bgColor: 'bg-emerald-500/10',
-      description: '👥 Fan Portal',
+      description: 'Fan Portal',
     },
   ]
+
+  const getIconForRole = (role: 'admin' | 'staff' | 'visitor') => {
+    switch (role) {
+      case 'admin':
+        return <Settings className="w-16 h-16" />
+      case 'staff':
+        return <Radar className="w-16 h-16" />
+      case 'visitor':
+        return <Users className="w-16 h-16" />
+    }
+  }
 
   const fillDemoAccount = (account: typeof demoAccounts[0]) => {
     setEmail(account.email)
@@ -339,9 +347,9 @@ export default function LoginPage() {
                           repeat: Infinity,
                           delay: idx * 0.2,
                         }}
-                        className="text-5xl mb-4"
+                        className="mb-4 text-white"
                       >
-                        {account.icon}
+                        {getIconForRole(account.role)}
                       </motion.div>
 
                       {/* Title */}
