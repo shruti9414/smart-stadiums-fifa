@@ -271,18 +271,20 @@ export default function LoginPage() {
                       </motion.button>
                     </form>
 
-                    {/* Register */}
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.8 }}
-                      className="mt-6 text-center text-sm text-gray-400"
-                    >
-                      No account?{' '}
-                      <Link href="/register" className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors">
-                        Create one
-                      </Link>
-                    </motion.p>
+                    {/* Register - Only for Visitors */}
+                    {(selectedRole === null || selectedRole === 'visitor') && (
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.8 }}
+                        className="mt-6 text-center text-sm text-gray-400"
+                      >
+                        👤 Visitors:{' '}
+                        <Link href="/register" className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors">
+                          Create one
+                        </Link>
+                      </motion.p>
+                    )}
                   </div>
                 </div>
               </LoginCard3D>
