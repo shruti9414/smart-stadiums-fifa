@@ -206,7 +206,7 @@ export async function POST(req: NextRequest) {
     let tokensUsed = 0
 
     try {
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
       // Build conversation history for Gemini
       const history = recentMessages

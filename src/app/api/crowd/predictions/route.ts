@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       }))
     } else {
       // Generate new predictions using Gemini AI with crowd context
-      const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
       const crowdContext = recentCrowd.length > 0
         ? `Recent crowd data: ${recentCrowd
