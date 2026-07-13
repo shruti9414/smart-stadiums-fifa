@@ -119,7 +119,7 @@ export default function ManageStaffPage() {
         setSuccess('✓ Staff member added successfully!')
       }
 
-      setFormData({ email: '', password: '', fullName: '' })
+      setFormData({ email: '', password: '', fullName: '', department: '' })
       setEditingId(null)
       setShowForm(false)
       await loadStaff()
@@ -138,6 +138,7 @@ export default function ManageStaffPage() {
       email: member.email,
       password: '',
       fullName: member.fullName,
+      department: member.department || '',
     })
     setShowPassword(false)
     setShowForm(true)
@@ -368,7 +369,7 @@ export default function ManageStaffPage() {
             onClick={() => {
               setShowForm(false)
               setEditingId(null)
-              setFormData({ email: '', password: '', fullName: '' })
+              setFormData({ email: '', password: '', fullName: '', department: '' })
             }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -395,7 +396,7 @@ export default function ManageStaffPage() {
                   onClick={() => {
                     setShowForm(false)
                     setEditingId(null)
-                    setFormData({ email: '', password: '', fullName: '' })
+                    setFormData({ email: '', password: '', fullName: '', department: '' })
                   }}
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.95 }}

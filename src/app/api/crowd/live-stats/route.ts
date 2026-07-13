@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
       predictions: predictions
         .slice(0, 4)
         .map((p) => ({
-          time: p.predictionTime,
+          time: p.predictionTime.toISOString(),
           occupancy: parseInt(p.occupancyPct.toString()),
           confidence: parseFloat(p.confidence.toString()),
           alerts: p.riskAlerts ? (p.riskAlerts as Record<string, any>).alerts || [] : [],

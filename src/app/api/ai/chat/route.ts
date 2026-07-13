@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
     } else {
       conversation = await prisma.aIConversation.create({
         data: {
-          userId: payload.userId,
+          userId: (payload as any).userId || 'visitor',
           stadiumId: 'lusail-2026', // Could be dynamic
           topic: message.substring(0, 50),
           language: selectedLanguage,

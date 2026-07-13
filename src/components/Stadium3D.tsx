@@ -67,7 +67,7 @@ export function Stadium3D({ occupancy, className = '' }: Stadium3DProps) {
     ctx.fill()
 
     // Draw stadium seats (2 sides - front and back)
-    const drawSeats = (startAngle, endAngle, offsetY) => {
+    const drawSeats = (startAngle: number, endAngle: number, offsetY: number) => {
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 6; j++) {
           const angle = startAngle + ((endAngle - startAngle) * i) / 7

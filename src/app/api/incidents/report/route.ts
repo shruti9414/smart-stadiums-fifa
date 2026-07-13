@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const token = req.headers.get('authorization')
     if (!token) return error('Unauthorized', 401)
 
-    const body = await validateBody(req, incidentSchema)
+    const body = await validateBody<any>(req, incidentSchema)
     if (!body) return error('Invalid input')
 
     // Create incident in database

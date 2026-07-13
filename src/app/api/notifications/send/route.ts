@@ -5,16 +5,17 @@ import * as admin from 'firebase-admin'
 
 // Initialize Firebase Admin SDK
 let firebaseInitialized = false
+const adminSDK = admin as any
 if (!firebaseInitialized && process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
   try {
-    if (!admin.apps.length) {
-      admin.initializeApp({
+    if (!adminSDK.apps?.length) {
+      adminSDK.initializeApp({
         projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        credential: admin.credential.cert({
+        credential: adminSDK.credential.cert({
           projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL || '',
           privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n') || '',
-        } as any),
+        }),
       })
     }
     firebaseInitialized = true
@@ -34,7 +35,7 @@ interface NotificationPayload {
 
 // Send Firebase push notification
 async function sendFirebasePush(userId: string, title: string, body: string, data: Record<string, string> = {}) {
-  if (!firebaseInitialized || !admin.apps.length) {
+  if (!firebaseInitialized || !adminSDK.apps?.length) {
     console.warn('Firebase not available, skipping push notification')
     return null
   }
@@ -61,7 +62,7 @@ async function sendFirebasePush(userId: string, title: string, body: string, dat
     // Send to all tokens
     const results = await Promise.allSettled(
       tokens.map((t) =>
-        admin
+        adminSDK
           .messaging()
           .send({
             ...message,
@@ -132,18 +133,25 @@ export async function POST(req: NextRequest) {
     const createdNotifications = []
     if (recipientList.length > 0) {
       for (const userId of recipientList) {
-        const notif = await prisma.userNotification.create({
+        // Create Notification first
+        const notification = await prisma.notification.create({
           data: {
-            userId,
             title,
             body: notificationBody,
             type: type || 'info',
-            read: false,
-            data: data || {},
-            createdAt: new Date(),
+            data: JSON.stringify(data || {}),
+            sentBy: userId,
           },
         })
-        createdNotifications.push(notif)
+
+        // Then link to user
+        const userNotif = await prisma.userNotification.create({
+          data: {
+            userId,
+            notificationId: notification.id,
+          },
+        })
+        createdNotifications.push(userNotif)
       }
     } else {
       // Broadcast to all users (critical incident)
@@ -158,15 +166,22 @@ export async function POST(req: NextRequest) {
 
       // Store in DB
       for (const user of allUsers) {
-        const notif = await prisma.userNotification.create({
+        // Create Notification first
+        const notification = await prisma.notification.create({
           data: {
-            userId: user.id,
             title,
             body: notificationBody,
             type: type || 'info',
-            read: false,
-            data: data || {},
-            createdAt: new Date(),
+            data: JSON.stringify(data || {}),
+            sentBy: user.id,
+          },
+        })
+
+        // Then link to user
+        const notif = await prisma.userNotification.create({
+          data: {
+            userId: user.id,
+            notificationId: notification.id,
           },
         })
         createdNotifications.push(notif)
@@ -218,7 +233,7 @@ export async function GET(req: NextRequest) {
 
     // Get recent notifications
     const notifications = await prisma.userNotification.findMany({
-      where: { userId: payload.userId },
+      where: { userId: (payload as any).userId || '' },
       orderBy: { createdAt: 'desc' },
       take: 50,
     })

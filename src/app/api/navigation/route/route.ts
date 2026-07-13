@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     const token = req.headers.get('authorization')
     if (!token) return error('Unauthorized', 401)
 
-    const body = await validateBody(req, navigationSchema)
+    const body = await validateBody<any>(req, navigationSchema)
     if (!body) return error('Invalid input')
 
     const fromPOI = MOCK_POIS[body.from]

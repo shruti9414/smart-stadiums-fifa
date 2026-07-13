@@ -230,7 +230,7 @@ export default function StaffPage() {
 
       // Update local state
       const updated = resources.map(r =>
-        r.id === resourceId ? { ...r, status: 'dispatched' } : r
+        r.id === resourceId ? ({ ...r, status: 'dispatched' } as TeamResource) : r
       )
       setResources(updated)
 

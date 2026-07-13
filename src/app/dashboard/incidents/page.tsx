@@ -15,7 +15,7 @@ export default function IncidentsPage() {
   const itemsPerPage = 6
   const [formData, setFormData] = useState({
     type: 'medical',
-    severity: 'medium' as const,
+    severity: 'medium',
     location: '',
     description: '',
   })

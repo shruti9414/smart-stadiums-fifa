@@ -1,10 +1,12 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
-import { InteractiveNavigationMap } from '@/components/InteractiveNavigationMap'
 import { motion } from 'framer-motion'
 import { redirect } from 'next/navigation'
+
+const InteractiveNavigationMap = dynamic(() => import('@/components/InteractiveNavigationMap').then(mod => ({ default: mod.InteractiveNavigationMap })), { ssr: false })
 
 interface Destination {
   id: string
