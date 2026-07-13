@@ -44,6 +44,34 @@ export function LandingHero() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-yellow-500/10 rounded-full blur-3xl" />
       </div>
 
+      {/* Top Logo - Left Side */}
+      <motion.div
+        initial={{ opacity: 0, x: -40 }}
+        animate={{
+          opacity: 1,
+          x: 0,
+          rotateY: [0, 360],
+        }}
+        transition={{
+          opacity: { duration: 0.8 },
+          rotateY: { duration: 8, repeat: Infinity, ease: 'linear' }
+        }}
+        className="absolute top-8 left-8 z-20"
+        style={{
+          perspective: '1000px',
+        }}
+      >
+        <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden shadow-lg shadow-yellow-500/30">
+          <Image
+            src="/stadium-logo.png"
+            alt="Stadium Logo"
+            fill
+            className="object-cover"
+            priority
+          />
+        </div>
+      </motion.div>
+
       {/* Main content */}
       <motion.div
         className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-20 text-center"
@@ -51,33 +79,6 @@ export function LandingHero() {
         initial="hidden"
         animate="visible"
       >
-        {/* 3D Stadium Logo */}
-        <motion.div
-          variants={itemVariants}
-          className="mb-12 flex justify-center items-center w-full"
-          animate={{
-            rotateY: [0, 360],
-            rotateX: [0, 5, -5, 0],
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          style={{
-            perspective: '1200px',
-          }}
-        >
-          <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/30">
-            <Image
-              src="/stadium-logo.png"
-              alt="Stadium Logo"
-              fill
-              className="object-cover hover:scale-110 transition-transform duration-300"
-              priority
-            />
-          </div>
-        </motion.div>
 
         {/* Badge - MUCH BIGGER */}
         <motion.div variants={itemVariants} className="mb-10">
