@@ -54,7 +54,7 @@ export function LandingHero() {
         {/* 3D Stadium Logo */}
         <motion.div
           variants={itemVariants}
-          className="mb-12 flex justify-center"
+          className="mb-12 flex justify-center items-center w-full"
           animate={{
             rotateY: [0, 360],
             rotateX: [0, 5, -5, 0],
@@ -68,7 +68,7 @@ export function LandingHero() {
             perspective: '1200px',
           }}
         >
-          <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-xl overflow-hidden shadow-2xl shadow-red-500/40 border-2 border-red-500/50 bg-gradient-to-br from-red-500/20 to-cyan-500/20 backdrop-blur-sm">
+          <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden shadow-2xl shadow-yellow-500/30">
             <Image
               src="/stadium-logo.png"
               alt="Stadium Logo"
