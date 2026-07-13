@@ -789,15 +789,22 @@ export default function StaffPage() {
                   >
                     {updatingStatus === 'responding' ? '⏳ Updating...' : '⏳ Responding'}
                   </motion.button>
-                  <motion.button
-                    onClick={() => handleStatusUpdate('resolved')}
-                    disabled={updatingStatus === 'resolved'}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="py-2.5 px-4 rounded-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-800 text-white font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30"
-                  >
-                    {updatingStatus === 'resolved' ? '⏳ Updating...' : '✓ Resolved'}
-                  </motion.button>
+                  {selectedIncident?.status !== 'resolved' && (
+                    <motion.button
+                      onClick={() => handleStatusUpdate('resolved')}
+                      disabled={updatingStatus === 'resolved'}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="py-2.5 px-4 rounded-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-800 text-white font-bold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30"
+                    >
+                      {updatingStatus === 'resolved' ? '⏳ Updating...' : '✓ Resolved'}
+                    </motion.button>
+                  )}
+                  {selectedIncident?.status === 'resolved' && (
+                    <div className="py-2.5 px-4 rounded-lg bg-gradient-to-r from-green-600 to-green-700 text-white font-bold text-sm text-center">
+                      ✅ Already Resolved
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
