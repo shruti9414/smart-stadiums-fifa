@@ -3,13 +3,6 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "OPENAI_API_KEY": "@openai_api_key",
-    "GOOGLE_AI_API_KEY": "@google_ai_api_key",
-    "AUTH_SECRET": "@auth_secret",
-    "NEXT_PUBLIC_API_URL": "@next_public_api_url"
-  },
   "functions": {
     "src/app/api/**/*.ts": {
       "maxDuration": 30
