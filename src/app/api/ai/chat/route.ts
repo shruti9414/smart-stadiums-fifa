@@ -277,7 +277,8 @@ export async function POST(req: NextRequest) {
         data: {
           conversationId: conversation.id,
           messageId: aiMessage.id,
-          message: aiResponse,
+          response: aiResponse, // Changed from 'message' to 'response' for consistency
+          message: aiResponse, // Also keep 'message' for backward compatibility
           language: selectedLanguage,
           timestamp: aiMessage.createdAt,
           tokensUsed,
@@ -294,7 +295,7 @@ export async function POST(req: NextRequest) {
       JSON.stringify({
         success: false,
         error: err.message || 'Chat failed',
-        hint: 'Ensure OPENAI_API_KEY is set in .env file',
+        hint: 'Ensure GOOGLE_AI_API_KEY is set in .env file',
       }),
       {
         status: 500,

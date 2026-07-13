@@ -97,10 +97,19 @@ export default function CompanionPage() {
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.data.response,
+          content: data.data.message || data.data.response || 'Unable to process response',
           timestamp: new Date().toISOString(),
         }
         setMessages(prev => [...prev, assistantMessage])
+      } else {
+        const errorData = await res.json()
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: `❌ Error: ${errorData.error || 'Failed to get response'}`,
+          timestamp: new Date().toISOString(),
+        }
+        setMessages(prev => [...prev, errorMessage])
       }
     } catch (error) {
       console.error('Chat error:', error)
