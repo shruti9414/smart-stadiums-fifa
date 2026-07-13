@@ -229,17 +229,35 @@ export async function POST(req: NextRequest) {
         `✓ Gemini Response (${selectedLanguage}): ~${tokensUsed} tokens estimated`
       )
     } catch (geminiError: any) {
-      console.error('Google Gemini API Error:', geminiError.message)
+      console.error('🔴 Google Gemini API Error Details:')
+      console.error('  Message:', geminiError.message)
+      console.error('  Full Error:', JSON.stringify(geminiError, null, 2))
+      console.error('  API Key Set?', !!process.env.GOOGLE_AI_API_KEY)
 
       // Provide helpful error message
       if (geminiError.message?.includes('API key')) {
-        throw new Error('Google Gemini API key is invalid. Check GOOGLE_AI_API_KEY in .env')
+        throw new Error('❌ Google Gemini API key is invalid or missing. Check GOOGLE_AI_API_KEY in .env')
       } else if (geminiError.message?.includes('429') || geminiError.message?.includes('quota')) {
         aiResponse = '⏳ API quota exceeded. Please wait a moment and try again.'
-      } else if (geminiError.message?.includes('404') || geminiError.message?.includes('not found')) {
-        // Fallback for model not found
-        console.warn('Gemini model not available, using fallback response')
-        aiResponse = `ℹ️ AI service temporarily unavailable. Stadium info: ${STADIUM_CONTEXT.amenities.restrooms}`
+      } else if (geminiError.message?.includes('404') || geminiError.message?.includes('not found') || geminiError.message?.includes('401')) {
+        // Fallback for auth or model issues
+        console.warn('⚠️ Gemini API not accessible, using fallback')
+        // Return a generic helpful message instead of always the same one
+        if (message.toLowerCase().includes('restroom') || message.toLowerCase().includes('toilet')) {
+          aiResponse = `🚽 ${STADIUM_CONTEXT.amenities.restrooms}`
+        } else if (message.toLowerCase().includes('food') || message.toLowerCase().includes('eat')) {
+          aiResponse = `🍽️ ${STADIUM_CONTEXT.amenities.food}`
+        } else if (message.toLowerCase().includes('medical') || message.toLowerCase().includes('doctor')) {
+          aiResponse = `🏥 ${STADIUM_CONTEXT.amenities.medical}`
+        } else if (message.toLowerCase().includes('accessibility') || message.toLowerCase().includes('wheelchair')) {
+          aiResponse = `♿ ${STADIUM_CONTEXT.amenities.wheelchair}`
+        } else if (message.toLowerCase().includes('parking') || message.toLowerCase().includes('car')) {
+          aiResponse = `🅿️ ${STADIUM_CONTEXT.amenities.parking}`
+        } else if (message.toLowerCase().includes('transport') || message.toLowerCase().includes('metro')) {
+          aiResponse = `🚆 ${STADIUM_CONTEXT.amenities.transport}`
+        } else {
+          aiResponse = `ℹ️ AI service temporarily unavailable. Try asking about: restrooms, food, medical, accessibility, parking, or transport.`
+        }
       } else {
         throw geminiError
       }
