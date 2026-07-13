@@ -90,6 +90,31 @@ export default function StaffPage() {
     loadIncidents()
   }, [token])
 
+  const refreshIncidents = () => {
+    const authToken = localStorage.getItem('auth_token')
+    if (!authToken) return
+
+    fetch('/api/incidents/report', {
+      headers: { Authorization: `Bearer ${authToken}` },
+    })
+      .then(res => res.json())
+      .then(data => {
+        const incidentsList = data.data?.incidents || []
+        const loadedIncidents = incidentsList.map((inc: any) => ({
+          id: inc.id,
+          type: inc.type,
+          severity: inc.severity,
+          location: inc.location || 'Unknown',
+          description: inc.description,
+          status: inc.status,
+          time: inc.createdAt,
+        }))
+        setIncidents(loadedIncidents)
+        console.log('✓ Incidents refreshed:', loadedIncidents.length)
+      })
+      .catch(err => console.error('Refresh failed:', err))
+  }
+
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -465,26 +490,36 @@ export default function StaffPage() {
               transition={{ duration: 0.3 }}
             >
               {/* Incident Filter Tabs */}
-              <div className="flex gap-2 mb-6 flex-wrap">
-                {[
-                  { label: '📋 All', value: 'all' as const },
-                  { label: '🔄 Responding', value: 'responding' as const },
-                  { label: '✅ Resolved', value: 'resolved' as const },
-                ].map(tab => (
-                  <motion.button
-                    key={tab.value}
-                    onClick={() => setIncidentFilter(tab.value)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className={`px-4 py-2 rounded-lg font-bold transition-all ${
-                      incidentFilter === tab.value
-                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg'
-                        : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50'
-                    }`}
-                  >
-                    {tab.label}
-                  </motion.button>
-                ))}
+              <div className="flex gap-2 mb-6 flex-wrap items-center justify-between">
+                <div className="flex gap-2 flex-wrap">
+                  {[
+                    { label: '📋 All', value: 'all' as const },
+                    { label: '🔄 Responding', value: 'responding' as const },
+                    { label: '✅ Resolved', value: 'resolved' as const },
+                  ].map(tab => (
+                    <motion.button
+                      key={tab.value}
+                      onClick={() => setIncidentFilter(tab.value)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                        incidentFilter === tab.value
+                          ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg'
+                          : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50'
+                      }`}
+                    >
+                      {tab.label}
+                    </motion.button>
+                  ))}
+                </div>
+                <motion.button
+                  onClick={refreshIncidents}
+                  whileHover={{ scale: 1.05, rotate: 10 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 rounded-lg bg-slate-700/50 hover:bg-slate-600/50 text-slate-300 hover:text-white font-bold transition-all"
+                >
+                  🔄 Refresh
+                </motion.button>
               </div>
 
               <motion.div
