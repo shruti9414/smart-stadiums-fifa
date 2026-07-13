@@ -172,7 +172,6 @@ model AIConversation {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   stadiumId   String
   topic       String?
-  language    String    @default("en")
   context     Json?
   tokenUsed   Int       @default(0)
   createdAt   DateTime  @default(now())
@@ -181,7 +180,6 @@ model AIConversation {
   messages    AIMessage[]
 
   @@index([userId, createdAt])
-  @@index([language])
 }
 
 model AIMessage {
