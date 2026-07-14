@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import bcryptjs from 'bcryptjs'
 
 const prisma = new PrismaClient()
@@ -18,8 +18,8 @@ async function main() {
         city: 'Doha',
         country: 'Qatar',
         capacity: 80000,
-        latitude: new Prisma.Decimal('25.3548'),
-        longitude: new Prisma.Decimal('51.5507'),
+        latitude: 25.3548,
+        longitude: 51.5507,
         timezone: 'Asia/Qatar',
         mapUrl: 'https://maps.google.com/maps?q=Lusail+Stadium',
       },
@@ -308,7 +308,7 @@ async function main() {
         data: {
           id: `analytics-${Date.now()}-${i}`,
           stadiumId: stadium.id,
-          occupancyPct: new Prisma.Decimal((Math.random() * 75 + 20).toFixed(2)),
+          occupancyPct: parseFloat((Math.random() * 75 + 20).toFixed(2)),
           zoneData: {
             A1: Math.floor(Math.random() * 100),
             A2: Math.floor(Math.random() * 100),
@@ -329,8 +329,8 @@ async function main() {
       data: {
         id: `prediction-30min`,
         stadiumId: stadium.id,
-        occupancyPct: new Prisma.Decimal('65.50'),
-        confidence: new Prisma.Decimal('0.92'),
+        occupancyPct: 65.50,
+        confidence: 0.92,
         predictionTime: new Date(Date.now() + 30 * 60 * 1000),
         riskAlerts: {
           level: 'moderate',
@@ -343,8 +343,8 @@ async function main() {
       data: {
         id: `prediction-2hr`,
         stadiumId: stadium.id,
-        occupancyPct: new Prisma.Decimal('78.30'),
-        confidence: new Prisma.Decimal('0.88'),
+        occupancyPct: 78.30,
+        confidence: 0.88,
         predictionTime: new Date(Date.now() + 2 * 60 * 60 * 1000),
         riskAlerts: {
           level: 'high',

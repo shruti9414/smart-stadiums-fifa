@@ -35,8 +35,8 @@ export async function GET(req: NextRequest) {
 
     // Group staff by department
     const departments = ['medical', 'security', 'fire', 'general']
-    const teams = departments.map((dept) => {
-      const deptStaff = staff.filter((s) => s.department === dept)
+    const teams = departments.map((dept: string) => {
+      const deptStaff = staff.filter((s: any) => s.department === dept)
 
       // Get department icon and name
       const deptConfig = {
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     })
 
     // Filter out empty teams
-    const activeTeams = teams.filter((t) => t.members > 0)
+    const activeTeams = teams.filter((t: any) => t.members > 0)
 
     console.log('✓ Teams fetched from database:', activeTeams.length)
 

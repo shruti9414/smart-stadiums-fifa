@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
-import { Prisma } from '@prisma/client'
 
 export async function GET(req: NextRequest) {
   try {
@@ -48,7 +47,7 @@ export async function GET(req: NextRequest) {
       })),
       predictions: predictions
         .slice(0, 4)
-        .map((p) => ({
+        .map((p: any) => ({
           time: p.predictionTime.toISOString(),
           occupancy: parseInt(p.occupancyPct.toString()),
           confidence: parseFloat(p.confidence.toString()),
@@ -121,7 +120,7 @@ export async function POST(req: NextRequest) {
     const crowdData = await prisma.crowdAnalytics.create({
       data: {
         stadiumId,
-        occupancyPct: new Prisma.Decimal(occupancyPct),
+        occupancyPct: parseFloat(occupancyPct),
         zoneData: zoneData || {},
       },
     })

@@ -193,8 +193,8 @@ export async function POST(req: NextRequest) {
     const messagesForAI = [
       { role: 'system' as const, content: systemPrompt },
       ...recentMessages
-        .filter((m) => m.id !== undefined) // Exclude current message
-        .map((m) => ({
+        .filter((m: any) => m.id !== undefined) // Exclude current message
+        .map((m: any) => ({
           role: (m.role === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
           content: m.content,
         })),
@@ -219,8 +219,8 @@ export async function POST(req: NextRequest) {
 
       // Build complete prompt with context
       const conversationContext = recentMessages
-        .filter((m) => m.id !== undefined)
-        .map((m) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+        .filter((m: any) => m.id !== undefined)
+        .map((m: any) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
         .join('\n')
 
       const fullPrompt = `${systemPrompt}\n\nPrevious conversation:\n${conversationContext}\n\nUser: ${message}\n\nAssistant:`

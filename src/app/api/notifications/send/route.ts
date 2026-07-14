@@ -61,7 +61,7 @@ async function sendFirebasePush(userId: string, title: string, body: string, dat
 
     // Send to all tokens
     const results = await Promise.allSettled(
-      tokens.map((t) =>
+      tokens.map((t: any) =>
         adminSDK
           .messaging()
           .send({
@@ -80,7 +80,7 @@ async function sendFirebasePush(userId: string, title: string, body: string, dat
       }
     }
 
-    const successCount = results.filter((r) => r.status === 'fulfilled').length
+    const successCount = results.filter((r: any) => r.status === 'fulfilled').length
     console.log(`✓ Push notifications sent: ${successCount}/${tokens.length} to user ${userId}`)
     return successCount
   } catch (error) {
@@ -238,7 +238,7 @@ export async function GET(req: NextRequest) {
       take: 50,
     })
 
-    const unreadCount = notifications.filter((n) => !n.read).length
+    const unreadCount = notifications.filter((n: any) => !n.read).length
 
     return new Response(
       JSON.stringify({

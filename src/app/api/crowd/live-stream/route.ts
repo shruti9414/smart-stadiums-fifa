@@ -30,7 +30,7 @@ async function getRecentIncidents(stadiumId: string, limit: number = 5) {
     take: limit,
   })
 
-  return incidents.map((i) => ({
+  return incidents.map((i: any) => ({
     id: i.id,
     type: i.type,
     severity: i.severity,
@@ -44,7 +44,7 @@ async function getQueueStatus(stadiumId: string) {
     where: { stadiumId, type: 'food' },
   })
 
-  return amenities.map((a) => ({
+  return amenities.map((a: any) => ({
     name: a.name,
     queueLength: a.queueLength || 0,
     capacity: a.capacity || 100,
@@ -125,7 +125,7 @@ export async function GET(req: NextRequest) {
             try {
               const queues = await getQueueStatus(stadiumId)
               if (queues.length > 0) {
-                const busyQueues = queues.filter((q) => q.occupancyPercent > 50)
+                const busyQueues = queues.filter((q: any) => q.occupancyPercent > 50)
                 if (busyQueues.length > 0) {
                   sendData({
                     type: 'queue',

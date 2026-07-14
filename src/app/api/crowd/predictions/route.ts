@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
 import { verifyToken } from '@/lib/auth'
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { Prisma } from '@prisma/client'
 
 // Initialize Gemini AI lazily to avoid build-time errors
 let genAI: GoogleGenerativeAI | null = null
@@ -55,7 +54,7 @@ export async function GET(req: NextRequest) {
 
     if (timeSinceLastPrediction !== null && timeSinceLastPrediction < 10) {
       // Use cached predictions
-      predictions = existingPredictions.map((p) => ({
+      predictions = existingPredictions.map((p: any) => ({
         time: p.predictionTime,
         occupancy: parseInt(p.occupancyPct.toString()),
         confidence: parseFloat(p.confidence.toString()),
@@ -69,7 +68,7 @@ export async function GET(req: NextRequest) {
         ? `Recent crowd data: ${recentCrowd
             .slice(0, 3)
             .map(
-              (c) =>
+              (c: any) =>
                 `${c.timestamp.toLocaleTimeString()}: ${c.occupancyPct}% occupancy`
             )
             .join(', ')}`
@@ -115,10 +114,8 @@ Format as JSON with array of predictions.`
               data: {
                 stadiumId,
                 predictionTime,
-                occupancyPct: new Prisma.Decimal(
-                  Math.min(99, Math.max(0, pred.occupancy || 65))
-                ),
-                confidence: new Prisma.Decimal(Math.min(1, Math.max(0, pred.confidence || 0.85))),
+                occupancyPct: Math.min(99, Math.max(0, pred.occupancy || 65)),
+                confidence: Math.min(1, Math.max(0, pred.confidence || 0.85)),
                 riskAlerts: {
                   alerts: pred.risks || [],
                   timestamp: new Date().toISOString(),
@@ -162,7 +159,7 @@ Format as JSON with array of predictions.`
       stadium: 'Lusail Stadium',
       generatedAt: new Date(),
       minutesAhead,
-      predictions: predictions.slice(0, 4).map((p, i) => ({
+      predictions: predictions.slice(0, 4).map((p: any, i: number) => ({
         minutesAhead: (i + 1) * minutesAhead,
         predictedOccupancy: p.occupancy,
         confidence: p.confidence,
