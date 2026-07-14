@@ -17,7 +17,7 @@ interface AuthStore {
 }
 
 // Simple hook-based auth (replaces Zustand for Vercel compatibility)
-export const useAuth = (): Partial<AuthStore> => {
+export const useAuth = (): AuthStore => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -38,7 +38,7 @@ export const useAuth = (): Partial<AuthStore> => {
     }
   }, [])
 
-  const setAuth = (newUser: User | null, newToken: string | null) => {
+  const setAuthFn = (newUser: User | null, newToken: string | null) => {
     if (newToken) {
       localStorage.setItem('auth_token', newToken)
       localStorage.setItem('auth_user', JSON.stringify(newUser))
@@ -57,5 +57,5 @@ export const useAuth = (): Partial<AuthStore> => {
     setToken(null)
   }
 
-  return { user, token, isLoading, setAuth, logout }
+  return { user, token, isLoading, setAuth: setAuthFn, logout }
 }

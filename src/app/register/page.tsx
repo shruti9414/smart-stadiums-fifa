@@ -11,7 +11,16 @@ import { UserPlus, AlertCircle, Loader, Shield, Smartphone, MapPin, Bell, Eye, E
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { setAuth } = useAuth()
+  const { setAuth: hookSetAuth } = useAuth() || {}
+
+  // Inline setAuth if hook version not available
+  const setAuth = hookSetAuth || ((user: any, token: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', token)
+      localStorage.setItem('auth_user', JSON.stringify(user))
+    }
+  })
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
