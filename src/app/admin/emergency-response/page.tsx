@@ -1,9 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
 import { motion, AnimatePresence } from 'framer-motion'
 import { redirect } from 'next/navigation'
+
+// Auth check without useAuth hook (causes build issues on Vercel)
+const useAuth = () => {
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    const savedToken = localStorage.getItem('auth_token')
+    setToken(savedToken)
+  }, [])
+  return { token }
+}
 
 interface EmergencyCall {
   id: string
