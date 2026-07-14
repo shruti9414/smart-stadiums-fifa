@@ -1,11 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { useAuth } from '@/hooks/useAuth'
-import { CrowdHeatmap } from '@/components/CrowdHeatmap'
-import { IncidentHotspots } from '@/components/IncidentHotspots'
 import { motion } from 'framer-motion'
 import { redirect } from 'next/navigation'
+
+// Lazy load components to avoid build issues
+const CrowdHeatmap = dynamic(() => import('@/components/CrowdHeatmap').then(mod => ({ default: mod.CrowdHeatmap })), { ssr: false })
+const IncidentHotspots = dynamic(() => import('@/components/IncidentHotspots').then(mod => ({ default: mod.IncidentHotspots })), { ssr: false })
 
 interface Zone {
   name: string
