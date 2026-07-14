@@ -2,12 +2,41 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { LanguageSelector } from './LanguageSelector'
-import { useLanguage, type Language } from '@/hooks/useLanguage'
-import { useAuth } from '@/hooks/useAuth'
+
+const useAuth = () => {
+  const [user, setUser] = useState<any>(null)
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('auth_token'))
+      const savedUser = localStorage.getItem('auth_user')
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser))
+        } catch (e) {
+          console.error('Failed to parse user:', e)
+        }
+      }
+    }
+  }, [])
+  return { user, token }
+}
+
+const useLanguage = () => {
+  const [language, setLanguage] = useState<string>('en')
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setLanguage(localStorage.getItem('language') || 'en')
+    }
+  }, [])
+  return { language, setLanguage }
+}
+
+type Language = string
 
 // Public links for visitors
 const PUBLIC_MENU_ITEMS = [
