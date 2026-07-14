@@ -1,10 +1,34 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
-import { useIncidentStore } from '@/hooks/useIncidents'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+
+// Inline hooks to avoid import issues
+const useAuth = () => {
+  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<any>(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const t = localStorage.getItem('auth_token')
+      const u = localStorage.getItem('auth_user')
+      setToken(t)
+      if (u) setUser(JSON.parse(u))
+    }
+  }, [])
+  return { token, user }
+}
+
+const useIncidentStore = () => {
+  const [incidents, setIncidents] = useState<any[]>([])
+  const initializeMockData = () => {
+    setIncidents([
+      { id: '1', type: 'medical', severity: 'high', location: 'Section A', status: 'reported', createdAt: new Date().toISOString() },
+      { id: '2', type: 'security', severity: 'medium', location: 'Section B', status: 'responding', createdAt: new Date().toISOString() },
+    ])
+  }
+  return { incidents, initializeMockData }
+}
 
 interface ZoneData {
   name: string

@@ -1,11 +1,25 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
 import { redirect } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ChevronLeft, Users, Zap, Shield, Flame, User2, Mail, Calendar, X } from 'lucide-react'
 import Link from 'next/link'
+
+// Inline hook to avoid import issues
+const useAuth = () => {
+  const [token, setToken] = useState<string | null>(null)
+  const [user, setUser] = useState<any>(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const t = localStorage.getItem('auth_token')
+      const u = localStorage.getItem('auth_user')
+      setToken(t)
+      if (u) setUser(JSON.parse(u))
+    }
+  }, [])
+  return { token, user }
+}
 
 interface StaffMember {
   id: string
