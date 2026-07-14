@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CrowdHeatmap } from '@/components/CrowdHeatmap'
-import { IncidentHotspots } from '@/components/IncidentHotspots'
+// import { CrowdHeatmap } from '@/components/CrowdHeatmap'
+// import { IncidentHotspots } from '@/components/IncidentHotspots'
 import { motion } from 'framer-motion'
 import { redirect } from 'next/navigation'
 
@@ -86,8 +86,11 @@ export default function AnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="h-80 bg-black/80">
-            <CrowdHeatmap occupancy={occupancy} />
+          <div className="h-80 bg-gradient-to-br from-blue-900/30 to-black/80 flex items-center justify-center rounded-2xl border border-blue-500/20">
+            <div className="text-center">
+              <div className="text-6xl font-bold text-blue-400">{Math.round(occupancy)}%</div>
+              <div className="text-slate-400 mt-2">Current Occupancy</div>
+            </div>
           </div>
         </motion.div>
 
@@ -226,12 +229,22 @@ export default function AnalyticsPage() {
 
         {/* Incident Hotspots */}
         <motion.div
-          className="rounded-3xl border border-slate-700/50 overflow-hidden shadow-2xl backdrop-blur-sm"
+          className="rounded-3xl border border-slate-700/50 bg-gradient-to-br from-red-900/20 to-slate-950/60 backdrop-blur-sm p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <IncidentHotspots interactive={true} />
+          <h3 className="text-xl font-bold text-white mb-4">🚨 Incident Hotspots</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="bg-red-900/30 rounded-lg p-4 border border-red-500/20">
+              <div className="font-bold text-red-400">North Gate Area</div>
+              <div className="text-sm text-slate-400">12 incidents - High severity</div>
+            </div>
+            <div className="bg-orange-900/30 rounded-lg p-4 border border-orange-500/20">
+              <div className="font-bold text-orange-400">Food Court Hub</div>
+              <div className="text-sm text-slate-400">10 incidents - High severity</div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Real-time Trends Chart */}

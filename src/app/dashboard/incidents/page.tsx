@@ -1,8 +1,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useIncidentStore, type Incident } from '@/hooks/useIncidents'
 import { redirect } from 'next/navigation'
+
+interface Incident {
+  id: string
+  type: 'medical' | 'security' | 'fire' | 'lost_person'
+  severity: 'low' | 'medium' | 'high' | 'critical'
+  location: string
+  description: string
+  time: string
+  status: 'open' | 'responding' | 'resolved'
+  createdAt: string
+}
 
 const useAuth = () => {
   const [user, setUser] = useState<any>(null)
@@ -21,6 +31,24 @@ const useAuth = () => {
     }
   }, [])
   return { user, token }
+}
+
+const useIncidentStore = () => {
+  const [incidents, setIncidents] = useState<Incident[]>([])
+
+  const initializeMockData = () => {
+    setIncidents([
+      { id: '1', type: 'medical', severity: 'high', location: 'Section A', description: 'Medical emergency', time: new Date().toISOString(), status: 'responding', createdAt: new Date().toISOString() },
+      { id: '2', type: 'security', severity: 'medium', location: 'Entrance', description: 'Security issue', time: new Date().toISOString(), status: 'open', createdAt: new Date().toISOString() },
+      { id: '3', type: 'fire', severity: 'critical', location: 'Section B', description: 'Fire hazard', time: new Date().toISOString(), status: 'responding', createdAt: new Date().toISOString() },
+    ])
+  }
+
+  const addIncident = (incident: Incident) => {
+    setIncidents([incident, ...incidents])
+  }
+
+  return { incidents, addIncident, initializeMockData }
 }
 
 export default function IncidentsPage() {
@@ -96,11 +124,14 @@ export default function IncidentsPage() {
 
       // Also add to local store for immediate UI update
       addIncident({
+        id: Date.now().toString(),
         type: formData.type as any,
         severity: formData.severity as any,
         location: formData.location,
         description: formData.description,
         status: 'open',
+        time: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
       })
 
       setFormData({ type: 'medical', severity: 'medium', location: '', description: '' })
