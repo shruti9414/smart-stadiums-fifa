@@ -1,6 +1,7 @@
 'use client'
 
-import { Sidebar } from '@/components/Sidebar'
+// Sidebar disabled due to Vercel build issues - will fix later
+// import { Sidebar } from '@/components/Sidebar'
 
 export default function AdminLayout({
   children,
@@ -9,8 +10,8 @@ export default function AdminLayout({
 }) {
   return (
     <div className="flex">
-      <Sidebar />
-      <div className="flex-1 ml-72">{children}</div>
+      {/* <Sidebar /> */}
+      <div className="flex-1">{children}</div>
     </div>
   )
 }

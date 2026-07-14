@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+import { useState, useEffect } from 'react'
 
 interface User {
   id: string
@@ -16,35 +16,46 @@ interface AuthStore {
   logout: () => void
 }
 
-export const useAuth = create<AuthStore>((set) => ({
-  user: null,
-  token: null,
-  isLoading: false,
-  setAuth: (user, token) => {
-    if (token) {
-      localStorage.setItem('auth_token', token)
-      localStorage.setItem('auth_user', JSON.stringify(user))
+// Simple hook-based auth (replaces Zustand for Vercel compatibility)
+export const useAuth = (): Partial<AuthStore> => {
+  const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedToken = localStorage.getItem('auth_token')
+      const savedUser = localStorage.getItem('auth_user')
+      if (savedToken) setToken(savedToken)
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser))
+        } catch (e) {
+          console.error('Failed to parse user:', e)
+        }
+      }
+      setIsLoading(false)
     }
-    set({ user, token })
-  },
-  logout: () => {
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('auth_user')
-    set({ user: null, token: null })
-  },
-}))
+  }, [])
 
-export function initAuth() {
-  const token = localStorage.getItem('auth_token')
-  const userStr = localStorage.getItem('auth_user')
-
-  if (token && userStr) {
-    try {
-      const user = JSON.parse(userStr)
-      useAuth.setState({ token, user })
-    } catch (e) {
+  const setAuth = (newUser: User | null, newToken: string | null) => {
+    if (newToken) {
+      localStorage.setItem('auth_token', newToken)
+      localStorage.setItem('auth_user', JSON.stringify(newUser))
+    } else {
       localStorage.removeItem('auth_token')
       localStorage.removeItem('auth_user')
     }
+    setUser(newUser)
+    setToken(newToken)
   }
+
+  const logout = () => {
+    localStorage.removeItem('auth_token')
+    localStorage.removeItem('auth_user')
+    setUser(null)
+    setToken(null)
+  }
+
+  return { user, token, isLoading, setAuth, logout }
 }
