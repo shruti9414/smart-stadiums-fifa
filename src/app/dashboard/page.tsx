@@ -1,11 +1,30 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
-import { StadiumDigitalTwin } from '@/components/StadiumDigitalTwin'
 import { motion } from 'framer-motion'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+
+const useAuth = () => {
+  const [user, setUser] = useState<any>(null)
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('auth_token'))
+      const savedUser = localStorage.getItem('auth_user')
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser))
+        } catch (e) {
+          console.error('Failed to parse user:', e)
+        }
+      }
+    }
+  }, [])
+  return { user, token }
+}
+
+import { StadiumDigitalTwin } from '@/components/StadiumDigitalTwin'
 
 interface CrowdStats {
   totalOccupancy: number

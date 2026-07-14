@@ -2,9 +2,18 @@
 
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
 import { motion } from 'framer-motion'
 import { redirect } from 'next/navigation'
+
+const useAuth = () => {
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('auth_token'))
+    }
+  }, [])
+  return { token }
+}
 
 const InteractiveNavigationMap = dynamic(() => import('@/components/InteractiveNavigationMap').then(mod => ({ default: mod.InteractiveNavigationMap })), { ssr: false })
 

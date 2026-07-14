@@ -1,9 +1,27 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
 import { useIncidentStore, type Incident } from '@/hooks/useIncidents'
 import { redirect } from 'next/navigation'
+
+const useAuth = () => {
+  const [user, setUser] = useState<any>(null)
+  const [token, setToken] = useState<string | null>(null)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('auth_token'))
+      const savedUser = localStorage.getItem('auth_user')
+      if (savedUser) {
+        try {
+          setUser(JSON.parse(savedUser))
+        } catch (e) {
+          console.error('Failed to parse user:', e)
+        }
+      }
+    }
+  }, [])
+  return { user, token }
+}
 
 export default function IncidentsPage() {
   const { token, user } = useAuth()
